@@ -46,6 +46,7 @@
 				</dict>
 			</array>
 		</dict>
+
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
@@ -56,15 +57,10 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>LuckyWay utilizza la tua posizione per mostrarti contenuti e servizi disponibili nella tua area.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>LuckyWay utilizza la posizione in background per fornire funzionalità basate sulla posizione anche quando l'app non è aperta.</string>
 </dict>
 </plist>

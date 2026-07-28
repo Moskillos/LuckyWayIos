@@ -1,1 +1,1 @@
-{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"luckyway-87629","configurations":{"ios":"1:588028017156:ios:b40fe7987824949419d351"}}}}}}
+{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"luckyway-87629","configurations":{"ios":"1:588028017156:ios:6e7e9ff6bd7bd89a19d351"}}},"ios":{"default":{"projectId":"luckyway-87629","appId":"1:588028017156:ios:6e7e9ff6bd7bd89a19d351","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}}}}}

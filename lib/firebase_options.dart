@@ -54,12 +54,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAwxM-v1AAlFtmntBd4QwcQ6K2LJGKQ9kk',
-    appId: '1:588028017156:ios:b40fe7987824949419d351',
+    appId: '1:588028017156:ios:6e7e9ff6bd7bd89a19d351',
     messagingSenderId: '588028017156',
     projectId: 'luckyway-87629',
     databaseURL: 'https://luckyway-87629-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'luckyway-87629.firebasestorage.app',
-    iosBundleId: 'com.geos.luckyway.luckyWayIos',
+    iosBundleId: 'com.geos.luckywayios',
   );
-
 }
