@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? get currentUser => _firebaseAuth.currentUser;
@@ -155,24 +154,49 @@ class Auth {
     }
   }
 
-  Future<void> deleteAccount() async {
+  Future<void> deleteAccount(String password) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw Exception("Nessun utente autenticato");
+    }
+
     try {
-      await _firebaseAuth.currentUser?.delete();
+      // Re-autenticazione obbligatoria
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      // Ora possiamo cancellare l'account
+      await user.delete();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        throw Exception("Password errata");
+      } else if (e.code == 'requires-recent-login') {
+        // Non dovrebbe più arrivare qui, ma per sicurezza
+        throw Exception("Riautenticazione richiesta");
+      } else if (e.code == 'too-many-requests') {
+        throw Exception("Troppi tentativi. Riprova più tardi");
+      } else {
+        throw Exception("Errore durante la cancellazione: ${e.message}");
+      }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
-  // Future<void> signOutwithGoogle() async {
-  //   try{
-  //     final GoogleSignIn googleSignIn = GoogleSignIn();
-  //     await googleSignIn.signOut();
-  //     await FirebaseAuth.instance.signOut();
-  //   } catch(e){
-  //     print(e);
-  //   }
-  //
-  // }
+// Future<void> signOutwithGoogle() async {
+//   try{
+//     final GoogleSignIn googleSignIn = GoogleSignIn();
+//     await googleSignIn.signOut();
+//     await FirebaseAuth.instance.signOut();
+//   } catch(e){
+//     print(e);
+//   }
+//
+// }
 }
 
 

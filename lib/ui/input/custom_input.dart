@@ -74,7 +74,7 @@ class _CustomInputState extends State<CustomInput> with SingleTickerProviderStat
           decoration: BoxDecoration(
               border: Border.all(color: primaryBlue, width: 1),
               borderRadius: BorderRadius.circular(50),
-            color: widget.backgroundInputColor
+              color: widget.backgroundInputColor
           ),
           width: MediaQuery.of(context).size.width - 20,
           child: Padding(
@@ -95,39 +95,13 @@ class _CustomInputState extends State<CustomInput> with SingleTickerProviderStat
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: widget.placeholder,
-                      hintStyle: greyText18
+                        hintStyle: greyText18
                     ),
                     onChanged: (value) =>  widget.updateValue(value),
                     validator: (value) {
-                      if(widget.placeholder == 'numero civico'){
-                        if (value == null || value.isEmpty) {
-                          return 'Inserisci un valore';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Inserisci un numero';
-                        }
-                        return null;
-                      }
-                      if(widget.placeholder == 'CAP'){
-                        if (value == null || value.isEmpty) {
-                          return 'Inserisci un valore';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Inserisci un numero';
-                        }
-                        if (double.tryParse(value)!.toInt().toString().length > 5) {
-                          return 'Non puoi inserire più di 5 valori';
-                        }
-                        if (double.tryParse(value)!.toInt().toString().length < 5) {
-                          return 'Non puoi inserire meno di 5 valori';
-                        }
-                        return null;
-                      }
                       if (value == null || value.isEmpty) {
                         return 'Inserisci un valore';
                       }
-
-
                       return null;
                     },
                   ),
@@ -156,27 +130,27 @@ class _CustomInputState extends State<CustomInput> with SingleTickerProviderStat
                       child: Text(widget.extraBtn!, style: blackText14,)
                   ) : const SpinKitCircle(size: 50, color: Colors.black,),
                 ) : const SizedBox(),
-          widget.searchIcon != null
-              ? InkWell(
-            onTap: () {
-              widget.extraFunction!();
-            },
-            child: widget.loader != null && widget.loader == false
-                ? Icon(widget.searchIcon, size: 25, color: Colors.black)
-                : _animation == null
-                ? const SpinKitCircle(size: 50, color: Colors.black)
-                : AnimatedBuilder(
-              animation: _animation!,
-              builder: (context, child) {
-                double radius = 5; // Raggio del cerchio
-                return Transform.translate(
-                  offset: Offset(radius * cos(_animation!.value), radius * sin(_animation!.value)),
-                  child: Icon(widget.searchIcon, size: 25, color: Colors.black),
-                );
-              },
-            ),
-          )
-              : const SizedBox(),
+                widget.searchIcon != null
+                    ? InkWell(
+                  onTap: () {
+                    widget.extraFunction!();
+                  },
+                  child: widget.loader != null && widget.loader == false
+                      ? Icon(widget.searchIcon, size: 25, color: Colors.black)
+                      : _animation == null
+                      ? const SpinKitCircle(size: 50, color: Colors.black)
+                      : AnimatedBuilder(
+                    animation: _animation!,
+                    builder: (context, child) {
+                      double radius = 5; // Raggio del cerchio
+                      return Transform.translate(
+                        offset: Offset(radius * cos(_animation!.value), radius * sin(_animation!.value)),
+                        child: Icon(widget.searchIcon, size: 25, color: Colors.black),
+                      );
+                    },
+                  ),
+                )
+                    : const SizedBox(),
               ],
             ),
           ),

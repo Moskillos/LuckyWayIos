@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lucky_way_ios/costants/text_style.dart';
 
 import '../../app_localizations.dart';
-import '../../costants/text_style.dart';
-import '../../ui/input/custom_input.dart';
-import '../../ui/input/custom_labeled_switch.dart';
 
 class DriverExpeditionOffer extends StatefulWidget {
   final String value;
@@ -13,15 +11,17 @@ class DriverExpeditionOffer extends StatefulWidget {
   final Function setNewOffer;
   final TextEditingController offerController;
   final String disableText;
+  final int offer;
   const DriverExpeditionOffer(
       {super.key,
-      required this.value,
-      required this.onChanged,
-      required this.firstItem,
-      required this.secondItem,
-      required this.offerController,
-      required this.setNewOffer,
-        required this.disableText});
+        required this.value,
+        required this.onChanged,
+        required this.firstItem,
+        required this.secondItem,
+        required this.offerController,
+        required this.setNewOffer,
+        required this.disableText,
+        required this.offer});
 
   @override
   State<DriverExpeditionOffer> createState() => _DriverExpeditionOfferState();
@@ -42,35 +42,19 @@ class _DriverExpeditionOfferState extends State<DriverExpeditionOffer> {
               SizedBox(
                 height: 20,
               ),
-              Row(children: [
-                SizedBox(
-                  width: 30,
-                ),
-                Text(
-                  AppLocalizations.of(context).translate("doYouAcceptOffer"),
-                  style: blackText14w700,
-                  textAlign: TextAlign.start,
-                ),
-              ]),
-              CustomLabeledSwitch(
-                  onChanged: widget.onChanged,
-                  value: widget.value,
-                  firstItem: widget.firstItem,
-                  secondItem: widget.secondItem),
+              Text(
+                AppLocalizations.of(context).translate("offer2"),
+                style: blackText28w700,
+                textAlign: TextAlign.start,
+              ),
               SizedBox(
                 height: 20,
               ),
-              CustomInput(
-                  controller: widget.offerController,
-                  placeholder:
-                      AppLocalizations.of(context).translate("insertLabel"),
-                  disable: !(widget.value ==
-                      widget.disableText),
-                  updateValue: widget.setNewOffer,
-                  label: AppLocalizations.of(context).translate("makeYouOffer")),
-              SizedBox(
-                height: 70,
-              ),
+              Text(
+                '${widget.offer.toString()}€',
+                style: blackText28w700,
+                textAlign: TextAlign.start,
+              )
             ],
           ),
         ));

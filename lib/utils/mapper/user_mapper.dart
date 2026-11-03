@@ -1,12 +1,10 @@
-
-
-import '../../database.dart';
-import '../../models/address_model.dart';
-import '../../models/chat_model.dart';
-import '../../models/expedition_model.dart';
-import '../../models/track_model.dart';
-import '../../models/truck_model.dart';
-import '../../models/user_model.dart';
+import 'package:lucky_way_ios/database.dart';
+import 'package:lucky_way_ios/models/address_model.dart';
+import 'package:lucky_way_ios/models/chat_model.dart';
+import 'package:lucky_way_ios/models/expedition_model.dart';
+import 'package:lucky_way_ios/models/track_model.dart';
+import 'package:lucky_way_ios/models/truck_model.dart';
+import 'package:lucky_way_ios/models/user_model.dart';
 
 UserType userTypeConverter(String type){
   if(type == "UserType.PHYSICPERSON"){
@@ -23,7 +21,6 @@ Future<PhysicPerson> physicPersonMapper( Map<String, dynamic> physicPerson)async
   List<ExpeditionModel> expeditions = [];
   List<TrackModel> tracks = [];
   List<UserType> types = [];
-  List<ChatModel> chats = [];
 
   if(physicPerson['addresses'] is List && physicPerson['addresses'].isNotEmpty){
     for(var address in physicPerson['addresses']){
@@ -47,18 +44,11 @@ Future<PhysicPerson> physicPersonMapper( Map<String, dynamic> physicPerson)async
     }
   }
 
-  if(physicPerson['chats'] != null && physicPerson['chats'] is List && physicPerson['chats'].isNotEmpty){
-    for(var chat in physicPerson['chats']){
-      ChatModel c = await FirebaseDatabase().getChat(chat);
-      chats.add(c);
-    }
-  }
-
   for(var type in physicPerson['userType']){
     types.add(userTypeConverter(type));
   }
 
-  return PhysicPerson(physicPerson['id'], physicPerson['name'], physicPerson['lastName'], physicPerson['email'], physicPerson['phone'], physicPerson['creationDate'], physicPerson['birthDate'],physicPerson['profileImage'] ?? '',physicPerson['token'] ,types, chats,userTypeConverter(physicPerson['userView']),tracks , physicPerson['fiscalCode'],addresses, expeditions);
+  return PhysicPerson(physicPerson['id'], physicPerson['name'], physicPerson['lastName'], physicPerson['email'], physicPerson['phone'], physicPerson['creationDate'], physicPerson['birthDate'],physicPerson['profileImage'] ?? '',physicPerson['token'] ,types,userTypeConverter(physicPerson['userView']),tracks , physicPerson['fiscalCode'],addresses, expeditions);
 
 
 }
@@ -91,18 +81,13 @@ Future<LegalPerson> legalPersonMapper( Map<String, dynamic> legalPerson)async{
     }
   }
 
-  if(legalPerson['chats'] != null && legalPerson['chats'] is List && legalPerson['chats'].isNotEmpty){
-    for(var chat in legalPerson['chats']){
-      ChatModel c = await FirebaseDatabase().getChat(chat);
-      chats.add(c);
-    }
-  }
+
 
   for(var type in legalPerson['userType']){
     types.add(userTypeConverter(type));
   }
 
-  return LegalPerson(legalPerson['id'], legalPerson['name'], legalPerson['lastName'], legalPerson['email'], legalPerson['phone'], legalPerson['creationDate'], legalPerson['birthDate'],legalPerson['profileImage'] ?? '',legalPerson['token'],types,chats, userTypeConverter(legalPerson['userView']), legalPerson['companyName'], tracks, legalPerson['vatNumber'], legalPerson['uniqueCode'] ?? '', addresses, expeditions );
+  return LegalPerson(legalPerson['id'], legalPerson['name'], legalPerson['lastName'], legalPerson['email'], legalPerson['phone'], legalPerson['creationDate'], legalPerson['birthDate'],legalPerson['profileImage'] ?? '',legalPerson['token'],types, userTypeConverter(legalPerson['userView']), legalPerson['companyName'], tracks, legalPerson['vatNumber'], legalPerson['uniqueCode'] ?? '', addresses, expeditions );
 
 }
 
@@ -131,13 +116,6 @@ Future<TruckDriverModel> truckDriverMapper( Map<String, dynamic> driver)async{
     types.add(userTypeConverter(type));
   }
 
-  if(driver['chats'] != null && driver['chats'] is List && driver['chats'].isNotEmpty){
-    for(var chat in driver['chats']){
-      ChatModel c = await FirebaseDatabase().getChat(chat);
-      chats.add(c);
-    }
-  }
-
   if(driver['evaluations'] != null && driver['evaluations'] is List && driver['evaluations'].isNotEmpty){
     for(var evaluation in driver['evaluations']){
       DriverEvaluation e = DriverEvaluation(evaluation['content'], evaluation['user'], evaluation['userImage'],double.parse(evaluation['evaluation']) );
@@ -146,7 +124,7 @@ Future<TruckDriverModel> truckDriverMapper( Map<String, dynamic> driver)async{
   }
 
 
-  TruckDriverModel t = TruckDriverModel(driver['id'], driver['name'], driver['lastName'], driver['email'], driver['phone'], driver['creationDate'], driver['birthDate'], driver['profileImage'] ?? '',driver['token'],types,chats, userTypeConverter(driver['userView']), tracks, trucks, driver['driverLicense'], driver['driverCode'], driver['vatNumber'], driver['uniqueCode'] ?? '', evaluations, driver['iban']);
+  TruckDriverModel t = TruckDriverModel(driver['id'], driver['name'], driver['lastName'], driver['email'], driver['phone'], driver['creationDate'], driver['birthDate'], driver['profileImage'] ?? '',driver['token'],types, userTypeConverter(driver['userView']), tracks, trucks, driver['driverLicense'], driver['driverCode'], driver['vatNumber'], driver['uniqueCode'] ?? '', evaluations, driver['iban']);
 
   return t;
 

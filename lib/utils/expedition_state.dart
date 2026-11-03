@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lucky_way_ios/costants/global_color.dart';
+import 'package:lucky_way_ios/database.dart';
+import 'package:lucky_way_ios/models/expedition_model.dart';
+import 'package:lucky_way_ios/models/user_model.dart';
+import 'package:lucky_way_ios/screens/payment_page.dart';
+import 'package:lucky_way_ios/store/app_state.dart';
 import 'package:provider/provider.dart';
 import '../app_localizations.dart';
-import '../costants/global_color.dart';
-import '../models/expedition_model.dart';
 
 String expeditionState(ExpeditionModel expedition, BuildContext context) {
   if (expedition.accepted) {
@@ -71,7 +75,7 @@ String expeditionIconState(ExpeditionModel expedition, context){
       return AppLocalizations.of(context).translate("assets/arrow-around.svg");
     } else {
       if (expedition.paid) {
-        return AppLocalizations.of(context).translate("assets/chat.svg"); // Aggiunto return
+        return AppLocalizations.of(context).translate("assets/hourglass.svg"); // Aggiunto return
       } else {
         return AppLocalizations.of(context).translate("assets/eur.svg");
       }
@@ -91,7 +95,7 @@ String expeditionMainIconState(ExpeditionModel expedition, context){
       return AppLocalizations.of(context).translate("assets/arrow-around.svg");
     } else {
       if (expedition.paid) {
-        return AppLocalizations.of(context).translate("assets/chat.svg"); // Aggiunto return
+        return AppLocalizations.of(context).translate("assets/hourglass.svg"); // Aggiunto return
       } else {
         return AppLocalizations.of(context).translate("assets/eur.svg");
       }
@@ -109,17 +113,17 @@ String expeditionMainIconState(ExpeditionModel expedition, context){
 Color expeditionColorState(ExpeditionModel expedition, context){
   if (expedition.accepted) {
     if (expedition.completed) {
-      return grey;
+      return backGroundColor;
     } else {
       if (expedition.paid) {
-        return grey; // Aggiunto return
+        return mainGreen; // Aggiunto return
       } else {
-        return grey;
+        return Colors.yellow;
       }
     }
   } else {
     if (expedition.paid) {
-      return grey;
+      return mainGreen;
     } else {
       return grey;
     }

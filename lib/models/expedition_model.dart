@@ -1,10 +1,7 @@
-
-
+import 'package:lucky_way_ios/models/address_model.dart';
 import 'package:lucky_way_ios/models/package_model.dart';
 import 'package:lucky_way_ios/models/track_model.dart';
 import 'package:lucky_way_ios/models/user_model.dart';
-
-import 'address_model.dart';
 
 class UserExpeditionType{
   String role;
@@ -27,7 +24,7 @@ class OwnerExModel{
   String? vatNumber;
   List<DriverEvaluation>? evaluations;
   OwnerExModel(this.id, this.ownerName, this.email, this.phone, this.token,this.userType, this.profileImage, {
-  this.fiscalCode,
+    this.fiscalCode,
     this.vatNumber,
     this.evaluations
   });
@@ -55,6 +52,7 @@ class OwnerExModel{
 }
 
 class ExpeditionModel{
+  String date;
   String id;
   List<PackageModel> packages;
   bool equip;
@@ -67,14 +65,16 @@ class ExpeditionModel{
   bool paid;
   bool retired;
   bool completed;
-  TrackModel? track;
+  String? track;
   String senderRole;
   UserExpeditionType sender;
   UserExpeditionType receiver;
+  String? trackDriverId;
 
 
-  ExpeditionModel(this.id, this.packages, this.equip,this.equipment, this.retireAddress, this.destinationAddress,this.offer, this.owner, this.accepted,this.paid,this.retired, this.completed,this.senderRole,this.receiver, this.sender, {
-  this.track
+  ExpeditionModel(this.date,this.id, this.packages, this.equip,this.equipment, this.retireAddress, this.destinationAddress,this.offer, this.owner, this.accepted,this.paid,this.retired, this.completed,this.senderRole,this.receiver, this.sender, {
+    this.track,
+    this.trackDriverId
   } );
 
   void onAcceptation(){

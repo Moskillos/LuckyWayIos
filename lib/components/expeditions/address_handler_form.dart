@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lucky_way_ios/ui/input/address_auto_complete_field.dart';
+import 'package:lucky_way_ios/ui/input/custom_input.dart';
 
 import '../../app_localizations.dart';
 import '../../costants/text_style.dart';
-import '../../ui/input/address_auto_complete_field.dart';
-import '../../ui/input/custom_input.dart';
 
 class AddressHandlerForm extends StatefulWidget {
   String? selectedCity;
@@ -18,7 +18,7 @@ class AddressHandlerForm extends StatefulWidget {
   final Function setPostalCode;
   final Function setName;
   final Function setNotes;
-  final String senderRole;
+  final String userRole;
   final Function setSenderPhone;
   final Function setSenderEmail;
   final Function setRecipientPhone;
@@ -39,7 +39,7 @@ class AddressHandlerForm extends StatefulWidget {
     required this.setPostalCode,
     required this.setName,
     required this.setNotes,
-    required this.senderRole,
+    required this.userRole,
     required this.setSenderPhone,
     required this.setSenderEmail,
     required this.setRecipientPhone,
@@ -55,7 +55,7 @@ class _AddressHandlerFormState extends State<AddressHandlerForm> {
   final String _apiKey = 'AIzaSyDVkK7x-ABKGCaMEVWyzuhbAe_jklIJo-U';
 
   Widget phoneAndEmailRender(){
-    if(widget.isRetire && widget.senderRole == 'recipient'){
+    if(widget.isRetire && widget.userRole == 'recipient'){
       return Column(
         children: [
           CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setName, label: AppLocalizations.of(context).translate("nameAndLastName"),),
@@ -65,7 +65,7 @@ class _AddressHandlerFormState extends State<AddressHandlerForm> {
           CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setSenderEmail, label: AppLocalizations.of(context).translate("emailText"),),
         ],
       );
-    } else if(!widget.isRetire && widget.senderRole == 'sender'){
+    } else if(!widget.isRetire && widget.userRole == 'sender'){
       return Column(
         children: [
           CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setName, label: AppLocalizations.of(context).translate("nameAndLastName"),),
@@ -93,7 +93,7 @@ class _AddressHandlerFormState extends State<AddressHandlerForm> {
           SizedBox(height: 20,),
           AddressAutocompleteField(
             label: AppLocalizations.of(context).translate(widget.isRetire ? "retireAddress" : "destinationAddress"),
-              apiKey: _apiKey,
+            apiKey: _apiKey,
             selectedCity: widget.selectedCity,
             selectedStreet: widget.selectedStreet,
             selectedPostalCode: widget.selectedPostalCode,

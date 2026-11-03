@@ -29,6 +29,21 @@ class _UpdateExpeditionStateState extends State<UpdateExpeditionState> {
   bool delivered = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      retired = widget.expedition.retired;
+      delivered = widget.expedition.completed;
+    });
+
+    print(retired);
+    print( widget.expedition.retired);
+    print(delivered);
+    print(widget.expedition.completed);
+  }
+
+  @override
   Widget build(BuildContext context) {
     TruckDriverModel user = Provider.of<AppState>(context).user as TruckDriverModel;
 
@@ -92,38 +107,9 @@ class _UpdateExpeditionStateState extends State<UpdateExpeditionState> {
                           });
                           if (retired) {
                             await FirebaseDatabase().setExpeditionToRetired(widget.expedition.id);
-                            var uuid = Uuid();
-                            String chatMessageId =
-                                'MESS${uuid.v4().substring(0, 8)}';
-
-                            String timeStamp = timeFormat(DateTime.now());
-
-                            ChatMessage firstMessage = ChatMessage(
-                                chatMessageId,
-                                user.id,
-                                AppLocalizations.of(context)
-                                    .translate("expeditionRetired"),
-                                timeStamp,
-                                true,
-                                expedition: widget.expedition.id);
-
-                            for(var chat in user.chats){
-                              for(var partecipant in chat.participants){
-                                if(partecipant.id == widget.expedition.owner.id){
-
-                                  Provider.of<AppState>(context, listen: false)
-                                      .addMessageToChat(chat.id, firstMessage);
-                                  await sendNotification(
-                                      widget.expedition.owner.token,
-                                      '${user.name} ${user.lastName}',
-                                      firstMessage.content,
-                                      chat.id,
-                                      null);
-
-                                }
-                              }
-                            }
-
+                            print("retired");
+                            print(retired);
+                            await sendNotification(widget.expedition.owner.token, '${user.name} ${user.lastName}', AppLocalizations.of(context).translate("expeditionRetired"), "acceptation", widget.expedition.id, "");
 
                           }
                         },
@@ -159,40 +145,8 @@ class _UpdateExpeditionStateState extends State<UpdateExpeditionState> {
                             delivered = value;
                           });
                           if (delivered) {
-
                             await FirebaseDatabase().setExpeditionToComplete(widget.expedition);
-                            var uuid = Uuid();
-                            String chatMessageId =
-                                'MESS${uuid.v4().substring(0, 8)}';
-
-                            String timeStamp = timeFormat(DateTime.now());
-
-                            ChatMessage firstMessage = ChatMessage(
-                                chatMessageId,
-                                user.id,
-                                AppLocalizations.of(context)
-                                    .translate("expeditionDelivered"),
-                                timeStamp,
-                                true,
-                                expedition: widget.expedition.id);
-
-                            for(var chat in user.chats){
-                              for(var partecipant in chat.participants){
-                                if(partecipant.id == widget.expedition.owner.id){
-
-                                  Provider.of<AppState>(context, listen: false)
-                                      .addMessageToChat(chat.id, firstMessage);
-                                  await sendNotification(
-                                      widget.expedition.owner.token,
-                                      '${user.name} ${user.lastName}',
-                                      firstMessage.content,
-                                      chat.id,
-                                      null);
-
-                                }
-                              }
-                            }
-
+                            await sendNotification(widget.expedition.owner.token, '${user.name} ${user.lastName}', AppLocalizations.of(context).translate("expeditionDelivered"), "acceptation", widget.expedition.id, "");
 
                           }
                         },

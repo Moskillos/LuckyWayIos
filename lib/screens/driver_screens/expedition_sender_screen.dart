@@ -23,20 +23,11 @@ class ExpeditionSenderScreen extends StatefulWidget {
 
 class _ExpeditionSenderScreenState extends State<ExpeditionSenderScreen> {
 
-  Future<void> makePhoneCall(String phoneNumber, String caller) async {
-    print('phoneNumber');
-    print('caller');
-    print(phoneNumber);
-    print(caller);
-    await sendCall(caller, phoneNumber);
-  }
-
   void copyString(String text){
     Clipboard.setData(ClipboardData(text: text));
   }
 
   Widget itemRender(String title, String value, String? icon, Function? action, Function? action2, Function? action3){
-    String number = '+39${context.watch<AppState>().user.phone}8';
 
     return Column(
       children: [
@@ -51,21 +42,6 @@ class _ExpeditionSenderScreenState extends State<ExpeditionSenderScreen> {
                 Text(value, style: blueText14,)
               ],
             ),
-            if(icon != null)InkWell(
-              onTap: (){
-                if (action != null) {
-                  action(value);
-                } else if(action2 != null){
-                  action2(value, number);
-                }
-              },
-              child: SvgPicture.asset(
-                icon,
-                color: Colors.black,
-                height: 30,
-                width: 30,
-              ),
-            )
           ],
         ),
         SizedBox(height: 5,),
@@ -93,8 +69,6 @@ class _ExpeditionSenderScreenState extends State<ExpeditionSenderScreen> {
                       AppLocalizations.of(context).translate("retireAddress"),
                       '${widget.expedition.retireAddress.street}, ${widget.expedition.retireAddress.civicNumber}, ${widget.expedition.retireAddress.city}',
                       'assets/copy.svg', copyString, null , null),
-                  itemRender(AppLocalizations.of(context).translate("phone"), '+39${widget.expedition.sender.phone}', 'assets/call.svg', null, makePhoneCall, null),
-                  // itemRender(AppLocalizations.of(context).translate("chat"), AppLocalizations.of(context).translate("clickToChat"), 'assets/messages.svg', null, null, null),
                 ],
               ),
             ],

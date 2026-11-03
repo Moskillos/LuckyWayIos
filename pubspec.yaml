@@ -36,7 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   provider: ^6.1.5+1
-  upgrader: ^12.5.0
+  upgrader: ^13.7.0
   shared_preferences: ^2.5.4
   google_maps_flutter: ^2.14.0
   flutter_svg: ^2.2.3
@@ -57,6 +57,10 @@ dependencies:
   model_viewer_plus: ^1.10.0
   signature: ^6.3.0
   flutter_dotenv: ^6.0.0
+  flutter_local_notifications: ^19.1.0
+  device_info_plus: ^13.3.0
+  flutter_localization: ^1.0.0
+  flutter_stripe: ^14.2.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

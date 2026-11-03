@@ -1,18 +1,17 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lucky_way_ios/utils/mapper/chat_mapper.dart';
+import 'package:lucky_way_ios/models/address_model.dart';
+import 'package:lucky_way_ios/models/chat_model.dart';
+import 'package:lucky_way_ios/models/expedition_model.dart';
+import 'package:lucky_way_ios/models/improve_request_model.dart';
+import 'package:lucky_way_ios/utils/date_format.dart';
 import 'package:lucky_way_ios/utils/mapper/expedition_mapper.dart';
 import 'package:lucky_way_ios/utils/mapper/expeditions_mapper.dart';
 import 'package:lucky_way_ios/utils/mapper/track_mapper.dart';
+import 'package:lucky_way_ios/utils/track_state_converter.dart';
 import 'package:lucky_way_ios/utils/mapper/tracks_mapper.dart';
 import 'package:lucky_way_ios/utils/mapper/user_mapper.dart';
-import 'package:lucky_way_ios/utils/track_state_converter.dart';
-
-import 'models/address_model.dart';
-import 'models/chat_model.dart';
-import 'models/expedition_model.dart';
-import 'models/improve_request_model.dart';
 import 'models/track_model.dart';
 import 'models/truck_model.dart';
 import 'models/user_model.dart';
@@ -116,7 +115,7 @@ class FirebaseDatabase {
         .where('id', isEqualTo: userId)
         .get();
     List<Map<String, dynamic>> legalPerson =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return legalPersonMapper(legalPerson[0]);
   }
 
@@ -126,7 +125,7 @@ class FirebaseDatabase {
         .where('id', isEqualTo: userId)
         .get();
     List<Map<String, dynamic>> physicPerson =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return physicPersonMapper(physicPerson[0]);
   }
 
@@ -136,7 +135,7 @@ class FirebaseDatabase {
         .where('id', isEqualTo: userId)
         .get();
     List<Map<String, dynamic>> driver =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return truckDriverMapper(driver[0]);
   }
 
@@ -218,10 +217,10 @@ class FirebaseDatabase {
 
   Future<List<ExpeditionModel>> getExpeditions() async {
     QuerySnapshot<Map<String, dynamic>> getResponse =
-        await db.collection('expeditions').get();
+    await db.collection('expeditions').get();
 
     List<Map<String, dynamic>> expeditions =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return expeditionsMapper(expeditions);
   }
 
@@ -231,9 +230,33 @@ class FirebaseDatabase {
         .collection('expeditions')
         .where('id', isEqualTo: expeditionId)
         .get();
-    List<Map<String, dynamic>> expedition =
-        getResponse.docs.map((doc) => doc.data()).toList();
-    return expeditionMapper(expedition[0], track);
+    print(getResponse);
+    List<Map<String, dynamic>> expeditions =
+    getResponse.docs.map((doc) => doc.data()).toList();
+
+    if(expeditions.isEmpty){
+      return ExpeditionModel(
+        dateFormat(DateTime.now()),
+        expeditionId,
+        [],
+        false,
+        "deleted",
+        AddressModel("id", "street", 45, "city", "province", 0000),
+        AddressModel("id", "street", 45, "city", "province", 0000),
+        0,
+        OwnerExModel("id", "ownerName", "email", "phone", "token", UserType.PHYSICPERSON, "profileImage"),
+        false,
+        false,
+        false,
+        false,
+        "senderRole",
+        UserExpeditionType("role", "name", "email", "phone"),
+        UserExpeditionType("role", "name", "email", "phone"),
+      );
+    } else {
+      return  expeditionMapper(expeditions[0], track);
+    }
+
   }
 
   Future<ExpeditionModel> getExpeditionWithTrack(String expeditionId) async {
@@ -242,23 +265,23 @@ class FirebaseDatabase {
         .where('id', isEqualTo: expeditionId)
         .get();
     List<Map<String, dynamic>> expedition =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return expeditionMapperWithTrack(expedition[0]);
   }
 
   Future<List<TrackModel>> getAllTracks() async {
     QuerySnapshot<Map<String, dynamic>> getResponse =
-        await db.collection('tracks').get();
+    await db.collection('tracks').get();
     List<Map<String, dynamic>> tracks =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return tracksMapper(tracks);
   }
 
   Future<TrackModel> getTrack(String trackId) async {
     QuerySnapshot<Map<String, dynamic>> getResponse =
-        await db.collection('tracks').where('id', isEqualTo: trackId).get();
+    await db.collection('tracks').where('id', isEqualTo: trackId).get();
     List<Map<String, dynamic>> track =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return trackMapper(track[0]);
   }
 
@@ -268,7 +291,7 @@ class FirebaseDatabase {
         .where('truckDriver', isEqualTo: truckDriverId)
         .get();
     List<Map<String, dynamic>> tracks =
-        getResponse.docs.map((doc) => doc.data()).toList();
+    getResponse.docs.map((doc) => doc.data()).toList();
     return tracksMapper(tracks);
   }
 
@@ -358,7 +381,7 @@ class FirebaseDatabase {
     try {
       // Recupera il documento dell'autista
       DocumentSnapshot truckDriverSnapshot =
-          await db.collection('truckDrivers').doc(user.id).get();
+      await db.collection('truckDrivers').doc(user.id).get();
 
       if (!truckDriverSnapshot.exists) {
         return;
@@ -366,7 +389,7 @@ class FirebaseDatabase {
 
       // Converti il documento in una mappa
       Map<String, dynamic> truckDriverData =
-          truckDriverSnapshot.data() as Map<String, dynamic>;
+      truckDriverSnapshot.data() as Map<String, dynamic>;
 
       // Recupera la lista dei camion
       List<dynamic> trucks = truckDriverData["trucks"] ?? [];
@@ -414,6 +437,7 @@ class FirebaseDatabase {
         }
       }
       await db.collection('expeditions').doc(expedition.id).set({
+        "date": expedition.date,
         "id": expedition.id,
         "packages": packages,
         "equip": expedition.equip,
@@ -565,7 +589,7 @@ class FirebaseDatabase {
     try {
       // Ottieni l'array trucks dall'utente
       DocumentSnapshot userDoc =
-          await db.collection('truckDrivers').doc(userId).get();
+      await db.collection('truckDrivers').doc(userId).get();
 
       if (userDoc.exists) {
         List<dynamic> trucks =
@@ -587,12 +611,6 @@ class FirebaseDatabase {
     } catch (e) {
       rethrow;
     }
-  }
-
-  Future<ChatModel> getChat(String chatId) async {
-    DocumentSnapshot chatDoc =
-    await db.collection('chats').doc(chatId).get();
-    return chatMapper(chatDoc.data() as Map<String, dynamic>);
   }
 
   Future<void> setTrackState(String trackId, TrackStates trackState) async {
@@ -617,22 +635,22 @@ class FirebaseDatabase {
     }
   }
 
-  Future<void> deleteExpeditionOnTrack(String expeditionId) async {
-    final CollectionReference<Map<String, dynamic>> tracksCollection =
-        db.collection('tracks');
+  Future<void> deleteExpeditionOnTrack(
+      String expeditionId,
+      String trackId,
+      ) async {
     try {
-      // Trova tutti i documenti che contengono l'expeditionId nell'array expeditions
-      QuerySnapshot querySnapshot = await tracksCollection
-          .where("expeditions", arrayContains: expeditionId)
-          .get();
+      final batch = db.batch();
+      final trackRef = db.collection('tracks').doc(trackId);
 
-      // Itera sui documenti trovati e rimuove l'expeditionId dall'array
-      for (var doc in querySnapshot.docs) {
-        await doc.reference.update({
-          "expeditions": FieldValue.arrayRemove([expeditionId])
-        });
-      }
+      await trackRef.update({
+        'expeditions': FieldValue.arrayRemove([expeditionId]),
+      });
+
+      print('Expedition $expeditionId removed from track $trackId');
+      await batch.commit();
     } catch (e) {
+      print('Error deleting expedition from track: $e');
       rethrow;
     }
   }
@@ -696,18 +714,18 @@ class FirebaseDatabase {
     if (user is LegalPerson) {
       batch.update(db.collection('legalPersons').doc(user.id), {
         "lastUpdated":
-            FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+        FieldValue.serverTimestamp() // Indica che c'è stata una modifica
       });
     } else {
       batch.update(db.collection('physicPersons').doc(user.id), {
         "lastUpdated":
-            FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+        FieldValue.serverTimestamp() // Indica che c'è stata una modifica
       });
     }
     if (driverId != null) {
       batch.update(db.collection('truckDrivers').doc(driverId), {
         "lastUpdated":
-            FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+        FieldValue.serverTimestamp() // Indica che c'è stata una modifica
       });
     }
 
@@ -749,13 +767,13 @@ class FirebaseDatabase {
         batch.update(
             db.collection('legalPersons').doc(expedition.owner.id), {
           "lastUpdated":
-              FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+          FieldValue.serverTimestamp() // Indica che c'è stata una modifica
         });
       } else if (expedition.owner.userType == UserType.PHYSICPERSON) {
         batch.update(
             db.collection('physicPersons').doc(expedition.owner.id), {
           "lastUpdated":
-              FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+          FieldValue.serverTimestamp() // Indica che c'è stata una modifica
         });
       }
     }
@@ -810,13 +828,13 @@ class FirebaseDatabase {
         batch.update(
             db.collection('legalPersons').doc(expedition.owner.id), {
           "lastUpdated":
-              FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+          FieldValue.serverTimestamp() // Indica che c'è stata una modifica
         });
       } else if (expedition.owner.userType == UserType.PHYSICPERSON) {
         batch.update(
             db.collection('physicPersons').doc(expedition.owner.id), {
           "lastUpdated":
-              FieldValue.serverTimestamp() // Indica che c'è stata una modifica
+          FieldValue.serverTimestamp() // Indica che c'è stata una modifica
         });
       }
       await batch.commit();
@@ -903,6 +921,8 @@ class FirebaseDatabase {
 
     if(chat.messages.isNotEmpty){
       for(var message in chat.messages){
+        print('message.answered');
+        print(message.answered);
         messages.add({
           "id": message.id,
           "senderId": message.senderId,
@@ -1054,10 +1074,12 @@ class FirebaseDatabase {
 
   Future<void> setExpeditionToRetired(String expeditionId)async {
     final batch = db.batch();
-
+    print(expeditionId);
     // Aggiorna lo stato dell'expedition
     batch
         .update(db.collection('expeditions').doc(expeditionId), {"retired": true});
+
+    await batch.commit();
   }
 
   Future<void> setMessageAnswered(String chatId, String messageId)async{

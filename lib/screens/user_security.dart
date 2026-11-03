@@ -24,9 +24,19 @@ class UserSecurity extends StatefulWidget {
 }
 
 class _UserSecurityState extends State<UserSecurity> {
+  bool loader = true;
 
-  Future<void> deleteAccount(UserBase user)async{
-    await Auth().deleteAccount();
+  Future<void> deleteAccount(UserBase user, String password)async{
+    setState(() {
+      loader = true;
+    });
+    await removeKeyStorage();
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Provider.of<AppState>(context, listen: false).logOut();
+    await Auth().deleteAccount(password);
+
+    await removeKeyStorage();
+
     if(user is TruckDriverModel){
       await FirebaseDatabase().deleteDriver(user);
     } else if (user is LegalPerson){
@@ -34,21 +44,22 @@ class _UserSecurityState extends State<UserSecurity> {
     } else {
       await FirebaseDatabase().deletePhysicPerson(user as PhysicPerson);
     }
-    await removeKeyStorage();
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    setState(() {
+      loader = false;
+    });
   }
 
-
+  Future logOut()async{
+    await removeKeyStorage();
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Provider.of<AppState>(context, listen: false).logOut();
+  }
 
   @override
   Widget build(BuildContext context) {
     UserBase user = Provider.of<AppState>(context).user;
 
-    Future logOut()async{
-      await removeKeyStorage();
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      Provider.of<AppState>(context, listen: false).logOut();
-    }
+
 
     return LuckyWayLayout(
         isNavigate: true,
@@ -68,11 +79,11 @@ class _UserSecurityState extends State<UserSecurity> {
                 MaterialPageRoute(
                     builder: (context) => ConfirmationScreen(
                       title: AppLocalizations.of(context).translate("changePasswordConfirm"),
-                      positiveAnswer: () => Auth().resetPassword(user.email),
+                      positiveAnswer: (o) => Auth().resetPassword(user.email),
 
                     )),
               ), 'assets/pencil_square.svg'
-                      ),
+              ),
               preferencesItem(
                   AppLocalizations.of(context).translate("deleteAccount"),
                   AppLocalizations.of(context).translate("deleteAccount"),
@@ -81,8 +92,8 @@ class _UserSecurityState extends State<UserSecurity> {
                       () => Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => ConfirmationScreen(
-                            title: AppLocalizations.of(context).translate("deleteAccountQuest"),
-                          positiveAnswer: () => deleteAccount(user),)),
+                          title: AppLocalizations.of(context).translate("deleteAccountQuest"),
+                          positiveAnswer: (pass) => deleteAccount(user, pass),)),
                   ), 'assets/pencil_square.svg'),
               preferencesItem(
                   AppLocalizations.of(context).translate("logOut"),
@@ -93,7 +104,7 @@ class _UserSecurityState extends State<UserSecurity> {
                     MaterialPageRoute(
                         builder: (context) => ConfirmationScreen(
                           title: AppLocalizations.of(context).translate("logOutQuest"),
-                          positiveAnswer: () => logOut(),)),
+                          positiveAnswer: (o) => logOut(),)),
                   ), 'assets/exit.svg'),
             ],
           ),

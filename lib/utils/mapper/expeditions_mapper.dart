@@ -1,11 +1,10 @@
 
-
+import 'package:lucky_way_ios/models/expedition_model.dart';
+import 'package:lucky_way_ios/utils/mapper/user_mapper.dart';
 
 import '../../models/address_model.dart';
-import '../../models/expedition_model.dart';
 import '../../models/package_model.dart';
 import '../../models/user_model.dart';
-import '../user_type_converter.dart';
 
 List<ExpeditionModel> expeditionsMapper( List<Map<String, dynamic>> expeditions){
   List<ExpeditionModel> expeditionsMapped = [];
@@ -24,7 +23,7 @@ List<ExpeditionModel> expeditionsMapper( List<Map<String, dynamic>> expeditions)
     UserExpeditionType receiver = UserExpeditionType(expedition['receiver']['role'], expedition['receiver']['name'], expedition['receiver']['email'], expedition['receiver']['phone']) ;
     UserExpeditionType sender = UserExpeditionType(expedition['sender']['role'], expedition['sender']['name'], expedition['sender']['email'], expedition['sender']['phone']) ;
 
-    ExpeditionModel expe = ExpeditionModel(expedition['id'], packages, expedition['equip'], expedition['equipment'] ?? '', retireAddress, destinationAddress,expedition['offer'], owner, expedition['accepted'],expedition['paid'] ?? false,expedition['retired'] ?? false, expedition['completed'] ?? false,expedition['senderRole'], receiver, sender);
+    ExpeditionModel expe = ExpeditionModel(expedition['date'],expedition['id'], packages, expedition['equip'], expedition['equipment'] ?? '', retireAddress, destinationAddress,expedition['offer'], owner, expedition['accepted'],expedition['paid'] ?? false,expedition['retired'] ?? false, expedition['completed'] ?? false,expedition['senderRole'], receiver, sender);
 
     expeditionsMapped.add(expe);
   }

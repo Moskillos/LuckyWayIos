@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lucky_way_ios/ui/input/custom_input.dart';
 
 import '../../app_localizations.dart';
 import '../../costants/text_style.dart';
-import '../../ui/input/custom_input.dart';
 
 class ArticlesDimensions extends StatefulWidget {
   final Function addArticle;
@@ -49,13 +49,13 @@ class _ArticlesDimensionsState extends State<ArticlesDimensions> {
           SizedBox(height: 40,),
           CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setNameArticle, label: AppLocalizations.of(context).translate("articleName"), controller: widget.nameArticleController,),
           SizedBox(height: 20,),
-          CustomInput(placeholder: AppLocalizations.of(context).translate("insertWidth"), updateValue: widget.setWidthArticle, label: AppLocalizations.of(context).translate("articleFeatures"), controller: widget.widthArticleController),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertWidth"), updateValue: widget.setWidthArticle, label: "${AppLocalizations.of(context).translate("articleFeatures")} ${AppLocalizations.of(context).translate("inCm")}", controller: widget.widthArticleController, textInputType: TextInputType.number,),
           SizedBox(height: 20,),
-          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLength"), updateValue: widget.setLengthArticle, controller: widget.lengthArticleController),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLength"), updateValue: widget.setLengthArticle, controller: widget.lengthArticleController, textInputType: TextInputType.number),
           SizedBox(height: 20,),
-          CustomInput(placeholder: AppLocalizations.of(context).translate("insertHeight"), updateValue: widget.setHeightArticle, controller: widget.heightArticleController),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertHeight"), updateValue: widget.setHeightArticle, controller: widget.heightArticleController, textInputType: TextInputType.number),
           SizedBox(height: 20,),
-          CustomInput(placeholder: AppLocalizations.of(context).translate("insertWeight"), updateValue: widget.setWeightArticle, controller: widget.weightArticleController),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertWeight"), updateValue: widget.setWeightArticle, controller: widget.weightArticleController, textInputType: TextInputType.number),
           SizedBox(height: 80,),
         ],
       ),

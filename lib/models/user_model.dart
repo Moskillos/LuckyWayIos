@@ -1,11 +1,7 @@
-
-
+import 'package:lucky_way_ios/models/address_model.dart';
+import 'package:lucky_way_ios/models/expedition_model.dart';
 import 'package:lucky_way_ios/models/track_model.dart';
 import 'package:lucky_way_ios/models/truck_model.dart';
-
-import 'address_model.dart';
-import 'chat_model.dart';
-import 'expedition_model.dart';
 
 class DriverEvaluation{
   String content;
@@ -27,10 +23,9 @@ sealed class UserBase {
   String profileImage;
   String token;
   List<UserType> userType = [];
-  List<ChatModel> chats;
   UserType userView;
 
-  UserBase(this.id, this.name, this.lastName, this.email, this.phone, this.creationDate, this.birthDate, this.profileImage, this.token,this.userType, this.chats, this.userView);
+  UserBase(this.id, this.name, this.lastName, this.email, this.phone, this.creationDate, this.birthDate, this.profileImage, this.token,this.userType, this.userView);
 }
 
 enum UserType{
@@ -45,7 +40,7 @@ class PhysicPerson extends UserBase {
   List<AddressModel> addresses;
   List<ExpeditionModel> expeditions;
 
-  PhysicPerson(super.id,super.name, super.lastName,super.email, super.phone, super.creationDate, super.birthDate, super.profileImage, super.token, super.userType, super.chats, super.userView, this.tracks, this.fiscalCode, this.addresses, this.expeditions);
+  PhysicPerson(super.id,super.name, super.lastName,super.email, super.phone, super.creationDate, super.birthDate, super.profileImage, super.token, super.userType, super.userView, this.tracks, this.fiscalCode, this.addresses, this.expeditions);
 
 }
 
@@ -57,7 +52,7 @@ class LegalPerson extends UserBase {
   List<AddressModel> addresses;
   List<ExpeditionModel> expeditions;
 
-  LegalPerson(super.id, super.name, super.lastName,super.email, super.phone, super.creationDate, super.birthDate,super.profileImage, super.token,super.userType, super.chats, super.userView,this.companyName, this.tracks, this.vatNumber,this.uniqueCode, this.addresses, this.expeditions);
+  LegalPerson(super.id, super.name, super.lastName,super.email, super.phone, super.creationDate, super.birthDate,super.profileImage, super.token,super.userType, super.userView,this.companyName, this.tracks, this.vatNumber,this.uniqueCode, this.addresses, this.expeditions);
 
 }
 
@@ -82,7 +77,6 @@ class TruckDriverModel extends UserBase{
       super.profileImage,
       super.token,
       super.userType,
-      super.chats,
       super.userView,
       this.tracks,
       this.trucks,
@@ -92,5 +86,5 @@ class TruckDriverModel extends UserBase{
       this.vatNumber,
       this.evaluations,
       this.iban
-  );
+      );
 }

@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lucky_way_ios/database.dart';
+import 'package:lucky_way_ios/models/address_model.dart';
+import 'package:lucky_way_ios/models/chat_model.dart';
+import 'package:lucky_way_ios/models/expedition_model.dart';
 
-import '../database.dart';
-import '../models/address_model.dart';
-import '../models/chat_model.dart';
-import '../models/expedition_model.dart';
 import '../models/track_model.dart';
 import '../models/truck_model.dart';
 import '../models/user_model.dart';
@@ -21,7 +21,6 @@ LegalPerson companyUser = LegalPerson(
     'creationDate',
     'birthDate',
     '',
-    [],
     [],
     UserType.PHYSICPERSON,
     '',
@@ -41,7 +40,6 @@ PhysicPerson privateUser = PhysicPerson(
     '',
     '',
     [],
-    [],
     UserType.GIURIDICPERSON,
     [],
     'ASDAD',
@@ -57,7 +55,6 @@ TruckDriverModel truckDriverMock = TruckDriverModel(
     'birthDate',
     '',
     '',
-    [],
     [],
     UserType.TRUCKDRIVER,
     [],
@@ -400,40 +397,6 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createChat(ChatModel newChat) async {
-    user.chats.add(newChat);
-    try {
-      await FirebaseDatabase().createChat(newChat);
-      for (var p in newChat.participants) {
-        if (p.userType == UserType.TRUCKDRIVER) {
-          await FirebaseDatabase().saveDriverChat(p.id, newChat.id);
-        } else if (p.userType == UserType.GIURIDICPERSON) {
-          await FirebaseDatabase().saveLegalPersonChat(p.id, newChat.id);
-        } else {
-          await FirebaseDatabase().savePhysicPersonChat(p.id, newChat.id);
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-
-    notifyListeners();
-  }
-
-  Future<void> addMessageToChat(String chatId, ChatMessage message) async {
-    for (var c in user.chats) {
-      if (c.id == chatId) {
-        c.messages.add(message);
-      }
-    }
-    notifyListeners();
-    try {
-      await FirebaseDatabase().updateChat(chatId, message);
-    } catch (e) {
-      print(e);
-    }
-  }
-
   Future<void> changeName(String newName) async {
     user.name = newName;
     notifyListeners();
@@ -481,5 +444,5 @@ class AppState extends ChangeNotifier {
       print(e);
     }
   }
-  
+
 }

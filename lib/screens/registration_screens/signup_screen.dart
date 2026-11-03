@@ -37,39 +37,49 @@ class SignupScreen extends StatefulWidget {
   final Function updateSenderType;
   final Function signUp;
   final Function setIban;
+  final Function updateFiscalCode;
+  final Function updateUniqueCode;
+  final bool privacyPolicy;
+  final Function setPrivacyPolicy;
 
   const SignupScreen(
       {super.key,
-      required this.userPurpose,
-      required this.name,
-      required this.lastName,
-      required this.email,
-      required this.password,
-      required this.passwordConfirm,
-      required this.vatCode,
-      required this.driveLicense,
-      required this.code,
-      required this.companyName,
-      required this.fiscalCode,
-      required this.userId,
-      required this.token,
-      required this.phone,
-      required this.userType,
-      required this.iban,
-      required this.senderType,
-      required this.updateCompanyName,
-      required this.updateVatCode,
-      required this.updateEmail,
-      required this.updatePasswordConfirm,
-      required this.updatePassword,
-      required this.updateName,
-      required this.updateLastName,
-      required this.updateSenderType,
-      required this.signUp,
-      required this.updateCode,
-      required this.updateDriveLicense,
-      required this.updatePhone,
-      required this.setIban});
+        required this.userPurpose,
+        required this.name,
+        required this.lastName,
+        required this.email,
+        required this.password,
+        required this.passwordConfirm,
+        required this.vatCode,
+        required this.driveLicense,
+        required this.code,
+        required this.companyName,
+        required this.fiscalCode,
+        required this.userId,
+        required this.token,
+        required this.phone,
+        required this.userType,
+        required this.iban,
+        required this.senderType,
+        required this.updateCompanyName,
+        required this.updateVatCode,
+        required this.updateEmail,
+        required this.updatePasswordConfirm,
+        required this.updatePassword,
+        required this.updateName,
+        required this.updateLastName,
+        required this.updateSenderType,
+        required this.signUp,
+        required this.updateCode,
+        required this.updateDriveLicense,
+        required this.updatePhone,
+        required this.setIban,
+        required this.updateFiscalCode,
+        required this.updateUniqueCode,
+        required this.privacyPolicy,
+        required this.setPrivacyPolicy
+
+      });
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -101,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
           CustomInput(
               label: AppLocalizations.of(context).translate("vatCode"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateVatCode,
               textStyle: blackText14),
           const SizedBox(
@@ -111,7 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
               label: AppLocalizations.of(context).translate("uniqueCode"),
               placeholder:
               AppLocalizations.of(context).translate("insertLabel"),
-              updateValue: widget.updateVatCode,
+              updateValue: widget.updateCode,
               textStyle: blackText14),
           const SizedBox(
             height: 20,
@@ -146,9 +156,9 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           CustomInput(
               label:
-                  AppLocalizations.of(context).translate("passwordConfirm"),
+              AppLocalizations.of(context).translate("passwordConfirm"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updatePasswordConfirm,
               textStyle: blackText14,
               isPassword: true),
@@ -160,18 +170,16 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Row(
               children: [
                 Checkbox(
-                    value: accepted,
+                    value: widget.privacyPolicy,
                     onChanged: (value) {
-                      setState(() {
-                        accepted = !accepted;
-                      });
+                      widget.setPrivacyPolicy;
                     }),
                 Flexible(
                   child: RichText(
                     text: TextSpan(
                       style: const TextStyle(
                         color:
-                            Colors.black, // Stile di default per tutto il testo
+                        Colors.black, // Stile di default per tutto il testo
                         fontSize: 16, // Dimensione del testo di default
                       ),
                       children: [
@@ -256,7 +264,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         TextSpan(
                             text:
-                                AppLocalizations.of(context).translate("dot")),
+                            AppLocalizations.of(context).translate("dot")),
                       ],
                     ),
                   ),
@@ -293,7 +301,7 @@ class _SignupScreenState extends State<SignupScreen> {
           CustomInput(
               label: AppLocalizations.of(context).translate("lastName"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateLastName,
               textStyle: blackText14),
           const SizedBox(
@@ -320,7 +328,7 @@ class _SignupScreenState extends State<SignupScreen> {
           CustomInput(
             label: AppLocalizations.of(context).translate("taxCode"),
             placeholder: AppLocalizations.of(context).translate("insertLabel"),
-            updateValue: widget.updateVatCode,
+            updateValue: widget.updateFiscalCode,
             textStyle: blackText14,
           ),
           const SizedBox(
@@ -339,7 +347,7 @@ class _SignupScreenState extends State<SignupScreen> {
           CustomInput(
               label: AppLocalizations.of(context).translate("passwordConfirm"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updatePasswordConfirm,
               textStyle: blackText14,
               isPassword: true),
@@ -362,7 +370,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     text: TextSpan(
                       style: const TextStyle(
                         color:
-                            Colors.black, // Stile di default per tutto il testo
+                        Colors.black, // Stile di default per tutto il testo
                         fontSize: 16, // Dimensione del testo di default
                       ),
                       children: [
@@ -447,7 +455,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         TextSpan(
                             text:
-                                AppLocalizations.of(context).translate("dot")),
+                            AppLocalizations.of(context).translate("dot")),
                       ],
                     ),
                   ),
@@ -480,13 +488,14 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomLabeledSwitch(
               value: widget.senderType,
               onChanged: (String value) {
+
                 widget.updateSenderType(value);
               },
               firstItem: AppLocalizations.of(context).translate("private"),
               secondItem: AppLocalizations.of(context).translate("company"),
             ),
             widget.senderType ==
-                    AppLocalizations.of(context).translate("private")
+                AppLocalizations.of(context).translate("private")
                 ? signUpPrivateForm()
                 : signUpCompanyForm()
           ],
@@ -503,7 +512,7 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Padding(
           padding: const EdgeInsets.only(left: 15.0, right: 15),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Text(
               AppLocalizations.of(context).translate("insertYourData"),
               style: greyText18,
@@ -514,7 +523,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
               label: AppLocalizations.of(context).translate("name"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateName,
               textStyle: blackText14,
             ),
@@ -524,7 +533,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
                 label: AppLocalizations.of(context).translate("lastName"),
                 placeholder:
-                    AppLocalizations.of(context).translate("insertLabel"),
+                AppLocalizations.of(context).translate("insertLabel"),
                 updateValue: widget.updateLastName,
                 textStyle: blackText14),
             const SizedBox(
@@ -533,7 +542,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
               label: AppLocalizations.of(context).translate("emailText"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateEmail,
               textStyle: blackText14,
             ),
@@ -543,7 +552,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
               label: AppLocalizations.of(context).translate("phone"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updatePhone,
               textStyle: blackText14,
             ),
@@ -553,7 +562,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
               label: AppLocalizations.of(context).translate("vatCode"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateVatCode,
               textStyle: blackText14,
             ),
@@ -562,9 +571,9 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             CustomInput(
               label:
-                  AppLocalizations.of(context).translate("driveLicenseNumber"),
+              AppLocalizations.of(context).translate("driveLicenseNumber"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateDriveLicense,
               textStyle: blackText14,
             ),
@@ -574,26 +583,26 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
               label: AppLocalizations.of(context).translate("thirdPartyLicense"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updateCode,
               textStyle: blackText14,
             ),
             const SizedBox(
               height: 20,
             ),
-                CustomInput(
-                    label: AppLocalizations.of(context).translate("uniqueCode"),
-                    placeholder:
-                    AppLocalizations.of(context).translate("insertLabel"),
-                    updateValue: widget.updateVatCode,
-                    textStyle: blackText14),
-                const SizedBox(
-                  height: 20,
-                ),
+            CustomInput(
+                label: AppLocalizations.of(context).translate("uniqueCode"),
+                placeholder:
+                AppLocalizations.of(context).translate("insertLabel"),
+                updateValue: widget.updateUniqueCode,
+                textStyle: blackText14),
+            const SizedBox(
+              height: 20,
+            ),
             CustomInput(
               label: AppLocalizations.of(context).translate("iban"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.setIban,
               textStyle: blackText14,
             ),
@@ -603,7 +612,7 @@ class _SignupScreenState extends State<SignupScreen> {
             CustomInput(
               label: AppLocalizations.of(context).translate("passwordText"),
               placeholder:
-                  AppLocalizations.of(context).translate("insertLabel"),
+              AppLocalizations.of(context).translate("insertLabel"),
               updateValue: widget.updatePassword,
               textStyle: blackText14,
               isPassword: true,
@@ -615,7 +624,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 label: AppLocalizations.of(context)
                     .translate("passwordConfirm"),
                 placeholder:
-                    AppLocalizations.of(context).translate("insertLabel"),
+                AppLocalizations.of(context).translate("insertLabel"),
                 updateValue: widget.updatePasswordConfirm,
                 textStyle: blackText14,
                 isPassword: true),

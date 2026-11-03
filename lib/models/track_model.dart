@@ -1,16 +1,16 @@
 
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lucky_way_ios/models/address_model.dart';
 import 'package:lucky_way_ios/models/truck_model.dart';
 
-import 'address_model.dart';
 import 'expedition_model.dart';
 
 enum TrackStates{
   CREATED,
   ONTHEWAY,
   STARTED,
-  COMPLETED
+  COMPLETED,
+  REJECTED
 }
 
 class TrackModel {
@@ -41,4 +41,4 @@ class TrackModel {
     this.actualCity
   });
 
-  }
+}

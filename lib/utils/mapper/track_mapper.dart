@@ -1,12 +1,12 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lucky_way_ios/models/address_model.dart';
+import 'package:lucky_way_ios/models/track_model.dart';
+import 'package:lucky_way_ios/models/user_model.dart';
+import 'package:lucky_way_ios/utils/track_state_converter.dart';
 
 import '../../database.dart';
-import '../../models/address_model.dart';
 import '../../models/expedition_model.dart';
-import '../../models/track_model.dart';
 import '../../models/truck_model.dart';
-import '../../models/user_model.dart';
-import '../track_state_converter.dart';
 import '../user_type_converter.dart';
 
 Future<TrackModel> trackMapper(Map<String, dynamic> track)async{
@@ -35,7 +35,6 @@ Future<TrackModel> trackMapper(Map<String, dynamic> track)async{
   if(track['expeditions'] is List && track['expeditions'].isNotEmpty){
     for(var expedition in track['expeditions']){
       ExpeditionModel expeditionsResponse = await FirebaseDatabase().getExpedition(expedition, null);
-
       expeditions.add(expeditionsResponse);
     }
   }
@@ -69,8 +68,8 @@ Future<TrackModel> trackMapper(Map<String, dynamic> track)async{
       trackStateConverter(track['trackState']),
       track['merchandise'],
       expeditions,
-    trackPoints: trackPoints,
-    actualCity: track['actualCity'] != null ? AddressModel(track['actualCity']['id'],track['actualCity']['street'], track['actualCity']['civicNumber'], track['actualCity']['city'], track['actualCity']['province'], track['actualCity']['cap']) : null
+      trackPoints: trackPoints,
+      actualCity: track['actualCity'] != null ? AddressModel(track['actualCity']['id'],track['actualCity']['street'], track['actualCity']['civicNumber'], track['actualCity']['city'], track['actualCity']['province'], track['actualCity']['cap']) : null
   );
   return t;
 }

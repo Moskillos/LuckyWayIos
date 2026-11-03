@@ -147,7 +147,7 @@ class _DriverExpeditionScreenState extends State<DriverExpeditionScreen> {
 
   @override
   Widget build(BuildContext context) {
-  TruckDriverModel driver = Provider.of<AppState>(context).user as TruckDriverModel;
+    TruckDriverModel driver = Provider.of<AppState>(context).user as TruckDriverModel;
 
     List<Widget> pages = [
       DriverExpeditionAddress(
@@ -163,7 +163,7 @@ class _DriverExpeditionScreenState extends State<DriverExpeditionScreen> {
           selectedProvince: selectedProvince
       ),
       DriverExpeditionFound(
-        changePage: changePage,
+          changePage: changePage,
           setExpedition: setExpedition,
           expeditionsCollection: _expeditionsCollection,
           selectedExpedition: selectedExpedition,
@@ -182,7 +182,8 @@ class _DriverExpeditionScreenState extends State<DriverExpeditionScreen> {
         secondItem: AppLocalizations.of(context).translate("no"),
         offerController: offerController,
         setNewOffer: setNewOffer,
-        disableText: AppLocalizations.of(context).translate("yes")
+        disableText: AppLocalizations.of(context).translate("yes"),
+        offer: selectedExpedition?.offer ?? 0,
       ),
       offerAccepted == AppLocalizations.of(context)
           .translate("yes") ? SuccessScreen(title: AppLocalizations.of(context).translate("expeditionAssigned")) :
@@ -201,47 +202,16 @@ class _DriverExpeditionScreenState extends State<DriverExpeditionScreen> {
             if(step != 1 && step != 2)LuckywayBtn(text: AppLocalizations.of(context).translate("goOn"), backgroundColor: Colors.black, textStyle: whiteText14w700, onPressed: () async {
               if(step == 3){
                 if(selectedExpedition != null){
-                  var uuid = Uuid();
-                  String chatId = 'C${uuid.v4().substring(0, 8)}';
-                  List<ChatUser> participants = [
-                    ChatUser(driver.id, UserType.TRUCKDRIVER, '${driver.name} ${driver.lastName}', driver.profileImage),
-                    ChatUser(selectedExpedition!.owner.id, selectedExpedition!.owner.userType, selectedExpedition!.owner.ownerName, selectedExpedition!.owner.profileImage),
-                  ];
-                  String chatMessageId = 'MESS${uuid.v4().substring(0, 8)}';
+                  await Provider.of<AppState>(context, listen: false).addExpeditionToTrack(selectedTrack!, selectedExpedition!);
 
-                  String timeStamp = timeFormat(DateTime.now());
-
-                  if(offerAccepted == AppLocalizations.of(context).translate("no")){
-                    if(newOffer.isNotEmpty){
-                      ChatMessage firstMessage = ChatMessage(chatMessageId, driver.id, AppLocalizations.of(context).translate("newOffer"), timeStamp, false,answered: false, offer: newOffer, expedition: selectedExpedition!.id, track: selectedTrack!.id);
-
-                      List<ChatMessage> messages = [
-                        firstMessage,
-                      ];
-
-                      ChatModel chat = ChatModel(chatId, participants, messages.last.content, timeStamp, messages,);
-                      Provider.of<AppState>(context, listen: false).createChat(chat);
-
-                      await sendNotification(selectedExpedition!.owner.token, '${driver.name} ${driver.lastName}', messages.last.content,  chat.id, null);
-                    }
-                  } else {
-                    await Provider.of<AppState>(context, listen: false).addExpeditionToTrack(selectedTrack!, selectedExpedition!);
-                    ChatMessage firstMessage = ChatMessage(chatMessageId, driver.id, AppLocalizations.of(context).translate("expeditionExcepted"), timeStamp, false,answered:  true);
-                    List<ChatMessage> messages = [
-                      firstMessage,
-                    ];
-
-                    ChatModel chat = ChatModel(chatId, participants, messages.last.content, timeStamp, messages);
-                    await Provider.of<AppState>(context, listen: false).createChat(chat);
-                    await sendNotification(selectedExpedition!.owner.token, '${driver.name} ${driver.lastName}', messages.last.content, chatId, null);
-                  }
+                  await sendNotification(selectedExpedition!.owner.token, '${driver.name} ${driver.lastName}', AppLocalizations.of(context).translate("offerAccepted"), selectedExpedition!.id, "acceptation", "");
                 }
               }
               if(step == 4){
                 step = 0;
                 return;
               }
-                changePage();
+              changePage();
             }),
           ],
         ),

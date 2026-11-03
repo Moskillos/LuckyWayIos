@@ -32,6 +32,7 @@ class _ExpeditionsWrapperState extends State<ExpeditionsWrapper> {
   ExpeditionModel? selectedExpedition;
   PageController _pageController = PageController();
   final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
+  bool loader = false;
 
   void setSelectedExpedition(ExpeditionModel ex){
     if(selectedExpedition == ex){
@@ -55,15 +56,12 @@ class _ExpeditionsWrapperState extends State<ExpeditionsWrapper> {
           AppLocalizations.of(context).translate("chooseExpedition"),
           style: greyText12,
         ),
-        SizedBox(
-          height: 20,
-        ),
-        SizedBox(
-          height: widget.showDetails
-              ? (MediaQuery.of(context).size.height / 2) + 20
-              : (MediaQuery.of(context).size.height / 2) - 20,
+        const SizedBox(height: 20),
+
+        // ← QUI: Expanded invece del SizedBox con MediaQuery
+        Expanded(
           child: PageView.builder(
-            clipBehavior: Clip.none,
+            clipBehavior: Clip.hardEdge,
             controller: _pageController,
             onPageChanged: (index) => _currentPage.value = index,
             itemCount: widget.pageCount,
@@ -72,14 +70,18 @@ class _ExpeditionsWrapperState extends State<ExpeditionsWrapper> {
               final end = (pageIndex + 1) * 3;
               final pageItems = widget.expeditions.sublist(
                 start,
-                end > widget.expeditions.length ? widget.expeditions.length : end,
+                end > widget.expeditions.length
+                    ? widget.expeditions.length
+                    : end,
               );
 
               return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: pageItems
                       .map(
                         (expedition) => ExpeditionCard2(
+                      track: widget.selectedTrack,
                       expedition: expedition,
                       setSelectedExpedition: setSelectedExpedition,
                       selectedExpedition: selectedExpedition,
@@ -91,7 +93,9 @@ class _ExpeditionsWrapperState extends State<ExpeditionsWrapper> {
             },
           ),
         ),
-        const SizedBox(height: 20),
+
+        const SizedBox(height: 16),
+
         ValueListenableBuilder<int>(
           valueListenable: _currentPage,
           builder: (context, value, _) {
@@ -105,49 +109,42 @@ class _ExpeditionsWrapperState extends State<ExpeditionsWrapper> {
                   height: 10,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: value == index
-                        ? Colors.black
-                        : Colors.grey[300],
+                    color: value == index ? Colors.black : Colors.grey[300],
                   ),
                 ),
               ),
             );
           },
         ),
-        LuckywayBtn(
-            text: 'asdas',
-            backgroundColor: Colors.black,
-            textStyle: whiteText14w700,
-            onPressed: () async {
 
-              var uuid = Uuid();
-              String chatId = 'C${uuid.v4().substring(0, 8)}';
-              String chatMessageId = 'MESS${uuid.v4().substring(0, 8)}';
-              List<ChatUser> partecipants = [
-                ChatUser(user.id, user.userView, '${user.name} ${user.lastName}', user.profileImage),
-                ChatUser(widget.selectedTrack.truckDriver.id, widget.selectedTrack.truckDriver.userType, widget.selectedTrack.truckDriver.ownerName, widget.selectedTrack.truckDriver.profileImage),
-              ];
-              String timeStamp = timeFormat(DateTime.now());
-              ChatMessage firstMessage = ChatMessage(chatMessageId, user.id, AppLocalizations.of(context).translate("expeditionRequest"), timeStamp, true,expedition: selectedExpedition!.id);
-              List<ChatMessage> messages = [
-                firstMessage,
-              ];
+        const SizedBox(height: 16),
 
-              ChatModel chat = ChatModel(chatId, partecipants, messages.last.content, timeStamp, messages);
-              await Provider.of<AppState>(context, listen: false).createChat(chat);
+        loader ? CircularProgressIndicator() : LuckywayBtn(
+          text: AppLocalizations.of(context).translate("goOn"),
+          backgroundColor: Colors.black,
+          textStyle: whiteText14w700,
+          onPressed: () async {
+            setState(() {
+              loader = true;
+            });
 
-              await sendNotification(
-                  widget.selectedTrack.truckDriver.token,
-                  '${user.name} ${user.lastName}',
-                  AppLocalizations.of(context).translate("expeditionRequest"),
-                  chat.id,
-                selectedExpedition!.id
-              );
-              widget.closeStates();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => SuccessPage()),
-              );
-            })
+            await sendNotification(
+                widget.selectedTrack.truckDriver.token,
+                '${user.name} ${user.lastName}',
+                AppLocalizations.of(context).translate("expeditionRequest"),
+                "expedition",
+                selectedExpedition!.id,
+                widget.selectedTrack.id
+            );
+            setState(() {
+              loader = false;
+            });
+            widget.closeStates();
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => SuccessPage()),
+            );
+          },
+        ),
       ],
     );
   }

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lucky_way_ios/ui/cards/track_card.dart';
 import 'package:lucky_way_ios/costants/global_color.dart';
 import 'package:lucky_way_ios/database.dart';
@@ -21,7 +20,6 @@ import '../../ui/custom_divider.dart';
 import '../../ui/input/address_auto_complete_field.dart';
 import '../../utils/get_city_coordinates.dart';
 import '../../utils/handle_expeditions.dart';
-import '../../utils/send_notifications.dart';
 import 'new_expedition_screen.dart';
 
 class SenderTrackScreen extends StatefulWidget {
@@ -49,9 +47,9 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
   bool showDetails = false;
   final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
   final CollectionReference<Map<String, dynamic>> _physicPersonsCollection =
-      FirebaseFirestore.instance.collection('physicPersons');
+  FirebaseFirestore.instance.collection('physicPersons');
   final CollectionReference<Map<String, dynamic>> _legalPersonsCollection =
-      FirebaseFirestore.instance.collection('legalPersons');
+  FirebaseFirestore.instance.collection('legalPersons');
   ExpeditionModel? selectedExpedition;
   bool showExpeditions = false;
   TrackModel? selectedTrack;
@@ -196,7 +194,7 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
               );
             },
             actionText:
-                AppLocalizations.of(context).translate("addAExpedition"),
+            AppLocalizations.of(context).translate("addAExpedition"),
             border: primaryBlue,
           ),
           SelectorWidgetCard2(
@@ -208,7 +206,7 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
               });
             },
             actionText:
-                AppLocalizations.of(context).translate("findAnotherTrack"),
+            AppLocalizations.of(context).translate("findAnotherTrack"),
             border: primaryBlue,
           )
         ],
@@ -287,47 +285,57 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
     int pageCount = (tracksNear.length / 3).ceil();
 
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          SizedBox(
-            height: 30,
-          ),
-          selectedTrack != null
-              ? TrackCard(
-                  isDriver: false,
-                  track: selectedTrack!,
-                  setSelectedTrack: setSelectedTrack,
-                  setShowExpeditions: setShowExpeditions,
-            selectedTrack: selectedTrack,
-                )
-              : SizedBox(
-                  height: (MediaQuery.of(context).size.height / 2) - 20,
-                  child: PageView.builder(
-                    itemBuilder: (context, pageIndex) {
-                      final start = pageIndex * 3;
-                      final end = (pageIndex + 1) * 3;
-                      final pageItems = tracksNear.sublist(
-                        start,
-                        end > tracksNear.length ? tracksNear.length : end,
-                      );
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: pageItems
-                              .map(
-                                (track) => TrackCard(
-                                  isDriver: false,
-                                  track: track,
-                                  setSelectedTrack: setSelectedTrack,
-                                  setShowExpeditions: setShowExpeditions,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+          const SizedBox(height: 30),
+
+          if (selectedTrack != null)
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 2 - 20, // stessa altezza dell’altro ramo
+              child: TrackCard(
+                isDriver: false,
+                track: selectedTrack!,
+                setSelectedTrack: setSelectedTrack,
+                setShowExpeditions: setShowExpeditions,
+                selectedTrack: selectedTrack,
+              ),
+            )
+          else
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 2 - 20,
+              child: PageView.builder(
+                itemCount: pageCount,
+                onPageChanged: (index) {
+                  _currentPage.value = index;
+                },
+                itemBuilder: (context, pageIndex) {
+                  final start = pageIndex * 3;
+                  final end = (pageIndex + 1) * 3;
+
+                  final pageItems = tracksNear.sublist(
+                    start,
+                    end > tracksNear.length
+                        ? tracksNear.length
+                        : end,
+                  );
+
+                  return Column(
+                    children: pageItems.map(
+                          (track) {
+                        return TrackCard(
+                          isDriver: false,
+                          track: track,
+                          setSelectedTrack: setSelectedTrack,
+                          setShowExpeditions: setShowExpeditions,
+                        );
+                      },
+                    ).toList(),
+                  );
+                },
+              ),
+            ),
+
           if (selectedTrack == null)
             ValueListenableBuilder<int>(
               valueListenable: _currentPage,
@@ -336,19 +344,21 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     pageCount,
-                    (index) => Container(
+                        (index) => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       width: 10,
                       height: 10,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: value == index ? Colors.black : Colors.grey[300],
+                        color: value == index
+                            ? Colors.black
+                            : Colors.grey[300],
                       ),
                     ),
                   ),
                 );
               },
-            )
+            ),
         ],
       ),
     );
@@ -356,7 +366,7 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
 
   Widget render(UserBase user) {
     if (showExpeditions) {
-      return expeditionRender(user);
+      return Expanded(child: expeditionRender(user));
     } else if (showLoader) {
       return SpinKitCircle(color: grey, size: 20);
     } else if (submitted) {
@@ -513,9 +523,9 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
             if (futureSnapshot.hasError) {
               return Center(
                   child: Text(
-                AppLocalizations.of(context).translate("errorGeneral"),
-                style: blackText14,
-              ));
+                    AppLocalizations.of(context).translate("errorGeneral"),
+                    style: blackText14,
+                  ));
             }
             if (!futureSnapshot.hasData || futureSnapshot.data!.isEmpty) {
               return Column(
@@ -540,9 +550,9 @@ class _SenderTrackScreenState extends State<SenderTrackScreen> with WidgetsBindi
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => NewExpeditionScreen(
-                                    track: selectedTrack,
+                                track: selectedTrack,
 
-                                  )),
+                              )),
                         );
                       })
                 ],

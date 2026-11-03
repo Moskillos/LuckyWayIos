@@ -22,7 +22,7 @@ class _ExpeditionOfferState extends State<ExpeditionOffer> {
         children: [
           Text(AppLocalizations.of(context).translate("offerDescr"), style: greyText18),
           SizedBox(height: 40,),
-          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setOffer, label: AppLocalizations.of(context).translate("offer"),),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setOffer, label: AppLocalizations.of(context).translate("offer"), textInputType: TextInputType.number,),
           SizedBox(height: 20,),
           CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setSpecialRequest, label: AppLocalizations.of(context).translate("specialRequestsForDriver"),),
         ],

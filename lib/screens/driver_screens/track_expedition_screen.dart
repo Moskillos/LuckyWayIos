@@ -74,9 +74,10 @@ class _TrackExpeditionScreenState extends State<TrackExpeditionScreen> {
                     child: Column(
                       children: pageItems.map(
                             (expedition) => ExpeditionCard2(
+                          track: widget.track,
                           expedition: expedition,
-                              selectedExpedition: selectedExpedition,
-                              setSelectedExpedition: setSelectedExpedition,
+                          selectedExpedition: selectedExpedition,
+                          setSelectedExpedition: setSelectedExpedition,
                         ),
                       ).toList(),
                     ),

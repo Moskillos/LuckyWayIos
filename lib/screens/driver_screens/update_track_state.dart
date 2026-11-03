@@ -63,46 +63,14 @@ class _UpdateTrackStateState extends State<UpdateTrackState> {
 
                             for(var expedition in widget.track.expeditions){
                               if(expedition.paid){
-                                var uuid = Uuid();
-                                String chatMessageId =
-                                    'MESS${uuid.v4().substring(0, 8)}';
+                                await sendNotification(expedition.owner.token, '${user.name} ${user.lastName}', AppLocalizations.of(context).translate("truckLeaving"), "acceptation", expedition.id, widget.track.id);
 
-                                String timeStamp = timeFormat(DateTime.now());
-
-                                ChatMessage firstMessage = ChatMessage(
-                                  chatMessageId,
-                                  user.id,
-                                  AppLocalizations.of(context)
-                                      .translate("journeyBegun"),
-                                  timeStamp,
-                                  true,
-
-                                );
-                                for(var chat in user.chats){
-                                  for(var partecipant in chat.participants){
-                                    if(partecipant.id == expedition.owner.id){
-
-                                      Provider.of<AppState>(context, listen: false)
-                                          .addMessageToChat(chat.id, firstMessage);
-                                      await sendNotification(
-                                          expedition.owner.token,
-                                          '${user.name} ${user.lastName}',
-                                          firstMessage.content,
-                                          chat.id,
-                                          null);
-
-                                    }
-                                  }
-                                }
                               } else {
                                 Provider.of<AppState>(context, listen: false).deleteExpeditionFromTrack(widget.track, expedition);
+                                await sendNotification(expedition.owner.token, '${user.name} ${user.lastName}', AppLocalizations.of(context).translate("expeditionRejected"), "acceptation", expedition.id, widget.track.id);
+
                               }
                             }
-
-
-
-
-
                           }
                         },
                         activeColor: Colors.white,

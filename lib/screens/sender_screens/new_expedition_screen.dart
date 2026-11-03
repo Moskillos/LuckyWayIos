@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lucky_way_ios/components/expeditions/articles_dimensions.dart';
@@ -17,6 +16,7 @@ import 'package:lucky_way_ios/models/track_model.dart';
 import 'package:lucky_way_ios/models/user_model.dart';
 import 'package:lucky_way_ios/screens/success_screen.dart';
 import 'package:lucky_way_ios/store/app_state.dart';
+import 'package:lucky_way_ios/utils/date_format.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,6 +26,7 @@ import '../../costants/text_style.dart';
 import '../../models/address_model.dart';
 import '../../models/expedition_model.dart';
 import '../../ui/buttons/luckyway_btn.dart';
+import '../../utils/popupValidation.dart';
 
 class NewExpeditionScreen extends StatefulWidget {
   TrackModel? track;
@@ -37,7 +38,7 @@ class NewExpeditionScreen extends StatefulWidget {
 
 class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
   PageController pageController = PageController();
-  String senderRole = 'sender';
+  String userRole = 'sender';
   int step = 0;
 
   //indirizzo di ritiro
@@ -64,7 +65,7 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
   String recipientEmail = '';
 
   //offerta
-  String offer = '0';
+  int offer = 0;
   String specialRequest = '';
 
   // tipo di merce
@@ -83,18 +84,14 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
   int heightArticle = 0;
   int weightArticle = 0;
 
-
   //altro
   String equip = '';
   bool isFlammable = false;
   bool isFragile = false;
 
-
-
-
-  void setSenderRole(String role){
+  void setSenderRole(String role) {
     setState(() {
-      senderRole = role;
+      userRole = role;
     });
   }
 
@@ -105,200 +102,234 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
     pageController.jumpToPage(step);
   }
 
-  void setCity(String value){
+  void setCity(String value) {
     setState(() {
       selectedCity = value;
     });
-
   }
 
-  void setStreet(String value){
+  void setStreet(String value) {
     setState(() {
       selectedStreet = value;
     });
-
   }
 
-  void setCivicNumber(String value){
+  void setCivicNumber(String value) {
     setState(() {
       selectedNumber = value;
     });
-
   }
 
-  void setPostalCode(String value){
+  void setPostalCode(String value) {
     setState(() {
       selectedPostalCode = value;
     });
-
   }
 
-  void setProvince(String value){
+  void setProvince(String value) {
     setState(() {
       selectedProvince = value;
     });
-
   }
 
-  void setRecipientName(String value){
+  void setRecipientName(String value) {
     setState(() {
-        recipientName = value;
+      recipientName = value;
     });
   }
 
-  void setSenderName(String value){
+  void setSenderName(String value) {
     setState(() {
       senderName = value;
     });
   }
 
-  void setRetireNotes(String value){
+  void setRetireNotes(String value) {
     setState(() {
       retireNotes = value;
     });
   }
 
-  void setDestinationNotes(String value){
+  void setDestinationNotes(String value) {
     setState(() {
       destinationNotes = value;
     });
   }
 
-  void setDestinationCity(String value){
+  void setDestinationCity(String value) {
     setState(() {
       selectedDestinationCity = value;
     });
-
   }
 
-  void setDestinationStreet(String value){
+  void setDestinationStreet(String value) {
     setState(() {
       selectedDestinationStreet = value;
     });
-
   }
 
-  void setDestinationCivicNumber(String value){
+  void setDestinationCivicNumber(String value) {
     setState(() {
       selectedDestinationNumber = value;
     });
-
   }
 
-  void setDestinationPostalCode(String value){
+  void setDestinationPostalCode(String value) {
     setState(() {
       selectedDestinationPostalCode = value;
     });
-
   }
 
-  void setDestinationProvince(String value){
+  void setDestinationProvince(String value) {
     setState(() {
       selectedDestinationProvince = value;
     });
-
   }
 
-  void setOffer(String value){
+  void setOffer(String value) {
     setState(() {
-      offer = value;
+      offer = int.parse(value);
     });
-
   }
 
-  void setSpecialRequest(String value){
+  void setSpecialRequest(String value) {
     setState(() {
       specialRequest = value;
     });
-
   }
 
-  void setMerchandise(String value){
+  void setMerchandise(String value) {
     setState(() {
       merchandiseSelected = value;
     });
   }
 
-  void addArticle(PackageModel article){
+  void addArticle(PackageModel article) {
     setState(() {
       articles.add(article);
     });
   }
 
-  void setNameArticle(String value){
+  void setNameArticle(String value) {
     setState(() {
       nameArticle = value;
     });
   }
 
-  void setWidthArticle(String value){
+  void setWidthArticle(String value) {
     setState(() {
       widthArticle = int.parse(value);
     });
   }
 
-  void setHeightArticle(String value){
+  void setHeightArticle(String value) {
     setState(() {
       heightArticle = int.parse(value);
     });
   }
 
-  void setWeightArticle(String value){
+  void setWeightArticle(String value) {
     setState(() {
       weightArticle = int.parse(value);
     });
   }
 
-  void setLengthArticle(String value){
+  void setLengthArticle(String value) {
     setState(() {
       lengthArticle = int.parse(value);
     });
   }
 
-  void setEquip(String value){
+  void setEquip(String value) {
     setState(() {
       equip = value;
     });
   }
 
-  void setIsFlammable(){
+  void setIsFlammable() {
     setState(() {
       isFlammable = !isFlammable;
     });
   }
 
-  void setIsFragile(){
+  void setIsFragile() {
     setState(() {
       isFragile = !isFragile;
     });
   }
 
-  void setSenderPhone(String value){
+  void setSenderPhone(String value) {
     setState(() {
       senderPhone = value;
     });
   }
 
-  void setSenderEmail(String value){
+  void setSenderEmail(String value) {
     setState(() {
       senderEmail = value;
     });
   }
 
-  void setRecipientPhone(String value){
+  void setRecipientPhone(String value) {
     setState(() {
       recipientPhone = value;
     });
   }
 
-  void setRecipientEmail(String value){
+  void setRecipientEmail(String value) {
     setState(() {
       recipientEmail = value;
     });
   }
 
-  void savePackage(){
-    PackageModel package = PackageModel(nameArticle, lengthArticle, widthArticle, heightArticle, weightArticle, isFlammable, isFragile, merchandiseSelected);
+  int savePackage() {
+    print("seaeada");
+    print(nameArticle);
+    if(nameArticle.isEmpty){
+      popUpValidation(
+          AppLocalizations.of(context).translate("name"),
+          context
+      );
+      return 0;
+    }
+    if(widthArticle == 0){
+      popUpValidation(
+          AppLocalizations.of(context).translate("width"),
+          context
+      );
+      return 0;
+    }
+    if(lengthArticle == 0){
+      popUpValidation(
+          AppLocalizations.of(context).translate("length"),
+          context
+      );
+      return 0;
+    }
+    if(heightArticle == 0){
+      popUpValidation(
+          AppLocalizations.of(context).translate("height"),
+          context
+      );
+      return 0;
+    }
+    if(weightArticle == 0){
+      popUpValidation(
+          AppLocalizations.of(context).translate("weight"),
+          context
+      );
+      return 0;
+    }
+
+    PackageModel package = PackageModel(
+        nameArticle,
+        lengthArticle,
+        widthArticle,
+        heightArticle,
+        weightArticle,
+        isFlammable,
+        isFragile,
+        merchandiseSelected);
     setState(() {
       articles.add(package);
       nameArticle = '';
@@ -315,10 +346,10 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
       _weightArticleController.text = '';
     });
 
-
+    return 1;
   }
 
-  void goToNewArticle(){
+  void goToNewArticle() {
     setState(() {
       step = step - 4;
     });
@@ -330,7 +361,8 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
     UserBase user = Provider.of<AppState>(context).user;
 
     List<Widget> pages = [
-      SenderReceiverChooseWidget(senderRole: senderRole, setSenderRole: setSenderRole),
+      SenderReceiverChooseWidget(
+          userRole: userRole, setUserRole: setSenderRole),
       AddressHandlerForm(
         setName: setSenderName,
         setNotes: setRetireNotes,
@@ -344,7 +376,7 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
         setCivicNumber: setCivicNumber,
         setPostalCode: setPostalCode,
         setProvince: setProvince,
-        senderRole: senderRole,
+        userRole: userRole,
         setSenderEmail: setSenderEmail,
         setSenderPhone: setSenderPhone,
         setRecipientEmail: setRecipientEmail,
@@ -364,7 +396,7 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
         setCivicNumber: setDestinationCivicNumber,
         setPostalCode: setDestinationPostalCode,
         setProvince: setDestinationProvince,
-        senderRole: senderRole,
+        userRole: userRole,
         setSenderEmail: setSenderEmail,
         setSenderPhone: setSenderPhone,
         setRecipientEmail: setRecipientEmail,
@@ -372,7 +404,9 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
         isRetire: false,
       ),
       ExpeditionOffer(setOffer: setOffer, setSpecialRequest: setSpecialRequest),
-      MerchandiseChoose(merchandiseSelected: merchandiseSelected, setMerchadiseSelected: setMerchandise),
+      MerchandiseChoose(
+          merchandiseSelected: merchandiseSelected,
+          setMerchadiseSelected: setMerchandise),
       ArticlesDimensions(
           addArticle: addArticle,
           weightArticleController: _weightArticleController,
@@ -384,19 +418,19 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
           setWidthArticle: setWidthArticle,
           setHeightArticle: setHeightArticle,
           setWeightArticle: setWeightArticle,
-          setLengthArticle: setLengthArticle
-      ),
+          setLengthArticle: setLengthArticle),
       OtherQuestions(
           setEquip: setEquip,
           setIsFlammable: setIsFlammable,
           setIsFragile: setIsFragile,
           isFragile: isFragile,
-          isFlammable: isFlammable
-      ),
+          isFlammable: isFlammable),
       ExpeditionSummary(
           retireCity: selectedCity ?? '',
           destinationCity: selectedDestinationCity ?? '',
-          senderName: senderName,
+          senderName: userRole == "sender"
+              ? "${user.name} ${user.lastName}"
+              : senderName,
           articles: articles,
           retireStreet: selectedStreet ?? '',
           retireNumber: selectedNumber ?? '',
@@ -406,97 +440,200 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
           destinationNumber: selectedDestinationNumber ?? '',
           destinationCap: selectedDestinationPostalCode ?? '',
           destinationProvince: selectedDestinationProvince ?? '',
-          recipientName: recipientName,
+          recipientName: userRole == "recipient"
+              ? "${user.name} ${user.lastName}"
+              : recipientName,
           offer: offer,
           merchandise: merchandiseSelected,
           flammable: isFlammable,
           fragile: isFragile,
-        senderRole: senderRole,
-        senderPhone: senderPhone,
-        senderEmail: senderEmail,
-        recipientPhone: recipientPhone,
-        recipientEmail: recipientEmail,
-        changePage: changePage
-      ),
-      SuccessScreen(title: AppLocalizations.of(context).translate("articleInsertSuccess")),
+          userRole: userRole,
+          senderPhone: senderPhone,
+          senderEmail: senderEmail,
+          recipientPhone: recipientPhone,
+          recipientEmail: recipientEmail,
+          changePage: changePage),
+      SuccessScreen(
+          title:
+          AppLocalizations.of(context).translate("articleInsertSuccess")),
       PublishExpedition(articles: articles, goToNewArticle: goToNewArticle),
-      SuccessScreen(title: AppLocalizations.of(context).translate("expeditionInsertSuccess"), description: AppLocalizations.of(context).translate("waitADriver"),)
+      SuccessScreen(
+        title:
+        AppLocalizations.of(context).translate("expeditionInsertSuccess"),
+        description: AppLocalizations.of(context).translate("waitADriver"),
+      )
     ];
 
     return LuckyWayLayout(
-      isNavigate: true,
+        isNavigate: true,
         hidePadding: (step == 8 || step == 10) ? true : null,
         hideTitle: (step == 8 || step == 10) ? true : null,
         title: AppLocalizations.of(context).translate("newExpedition"),
-        button: step != 7 ? Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(width: 30,),
-        LuckywayBtn(
-          icon: step == 9 ? 'assets/send.svg' : null,
-            text: AppLocalizations.of(context).translate(step == 9 ? "publishExpedition" : "goOn"),
-            backgroundColor: Colors.black,
-            textStyle: whiteText14w700,
-            onPressed: (){
-              if(step == 5){
-                savePackage();
-              }
-              if(step == 9){
-                var uuid = Uuid();
-                String expeditionId = 'E${uuid.v4().substring(0, 8)}';
-                String addressId = 'A${uuid.v4().substring(0, 8)}';
-                String addressId2 = 'A${uuid.v4().substring(0, 8)}';
-                AddressModel retireAddress = AddressModel(addressId, selectedStreet!, int.parse(selectedNumber!), selectedCity!, selectedProvince!, int.parse(selectedPostalCode!));
-                AddressModel destinationAddress = AddressModel(addressId2, selectedDestinationStreet!, int.parse(selectedDestinationNumber!), selectedDestinationCity!, selectedDestinationProvince!, int.parse(selectedDestinationPostalCode!));
-                ExpeditionModel expedition = ExpeditionModel(
-                    expeditionId,
-                    articles,
-                    true,
-                    'equipment',
-                    retireAddress,
-                    destinationAddress,
-                    int.parse(offer),
-                    OwnerExModel(
-                      user.id,
-                      user.name,
-                      user.email,
-                      user.phone,
-                      user.token,
-                      user.userView,
-                      user.profileImage,
-                      fiscalCode: (user is PhysicPerson) ? user.fiscalCode : null,
-                      vatNumber: (user is LegalPerson) ? user.vatNumber : null,
-                    ),
-                    false,
-                    false,
-                    false,
-                    false,
-                    senderRole,
-                    UserExpeditionType(
-                        'recipient',
-                        senderRole == 'recipient' ? '${user.name} ${user.lastName}' : recipientName,
-                        senderRole == 'recipient' ? user.email : recipientEmail,
-                        senderName == 'recipient' ? user.phone : recipientPhone
-                    ),
-                    UserExpeditionType(
-                        'sender',
-                        senderRole == 'sender' ? '${user.name} ${user.lastName}' : recipientName,
-                        senderRole == 'sender' ? user.email : recipientEmail,
-                        senderName == 'sender' ? user.phone : recipientPhone
-                    ),
-                  track: widget.track
-                );
-                Provider.of<AppState>(context, listen: false).addNewExpedition(expedition);
-              }
-              if(step == 10){
-                Navigator.popUntil(context, (route) => route.isFirst);
-                return;
-              }
-              changePage();
-            }),
-      ],
-    ) : SizedBox(),
-        content: PageViewBuilderLayout(pageController: pageController, pages: pages),
+        button: step != 7
+            ? Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 30,
+            ),
+            LuckywayBtn(
+                icon: step == 9 ? 'assets/send.svg' : null,
+                text: AppLocalizations.of(context)
+                    .translate(step == 9 ? "publishExpedition" : "goOn"),
+                backgroundColor: Colors.black,
+                textStyle: whiteText14w700,
+                onPressed: () {
+                  if (step == 2) {
+                    if(recipientName.isEmpty){
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("name"),
+                          context
+                      );
+                      return;
+                    }
+                    if(recipientPhone.isEmpty){
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("phone"),
+                          context
+                      );
+                      return;
+                    }
+                    if(recipientEmail.isEmpty){
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("email"),
+                          context
+                      );
+                      return;
+                    }
+                    final emailRegex = RegExp(
+                      r'^[\w\.-]+@[\w\.-]+\.\w+$',
+                    );
+
+                    if (!emailRegex.hasMatch(recipientEmail)) {
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("emailInvalid"),
+                          context
+                      );
+                      return;
+                    }
+
+                    if (recipientPhone.isEmpty) {
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("phone"),
+                          context
+                      );
+                      return;
+                    }
+                    final phoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
+                    if (!phoneRegex.hasMatch(recipientPhone)) {
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("phoneInvalid"),
+                          context
+                      );
+                      return;
+                    }
+
+
+                  }
+                  if(step == 3){
+                    if(offer == 0){
+                      popUpValidation(
+                          AppLocalizations.of(context).translate("offer"),
+                          context
+                      );
+                      return;
+                    }
+                  }
+                  if (step == 5) {
+                    if(savePackage() == 0){
+                      return;
+                    };
+                  }
+                  if (step == 9) {
+                    var uuid = Uuid();
+                    String expeditionId = 'E${uuid.v4().substring(0, 8)}';
+                    String addressId = 'A${uuid.v4().substring(0, 8)}';
+                    String addressId2 = 'A${uuid.v4().substring(0, 8)}';
+                    AddressModel retireAddress = AddressModel(
+                        addressId,
+                        selectedStreet!,
+                        int.parse(selectedNumber!),
+                        selectedCity!,
+                        selectedProvince!,
+                        int.parse(selectedPostalCode!));
+                    AddressModel destinationAddress = AddressModel(
+                        addressId2,
+                        selectedDestinationStreet!,
+                        int.parse(selectedDestinationNumber!),
+                        selectedDestinationCity!,
+                        selectedDestinationProvince!,
+                        int.parse(selectedDestinationPostalCode!));
+
+                    ExpeditionModel expedition = ExpeditionModel(
+                      dateFormat(DateTime.now()),
+                      expeditionId,
+                      articles,
+                      true,
+                      'equipment',
+                      retireAddress,
+                      destinationAddress,
+                      offer,
+                      OwnerExModel(
+                        user.id,
+                        user.name,
+                        user.email,
+                        user.phone,
+                        user.token,
+                        user.userView,
+                        user.profileImage,
+                        fiscalCode: (user is PhysicPerson)
+                            ? user.fiscalCode
+                            : null,
+                        vatNumber:
+                        (user is LegalPerson) ? user.vatNumber : null,
+                      ),
+                      false,
+                      false,
+                      false,
+                      false,
+                      userRole,
+                      UserExpeditionType(
+                          'recipient',
+                          userRole == 'recipient'
+                              ? '${user.name} ${user.lastName}'
+                              : recipientName,
+                          userRole == 'recipient'
+                              ? user.email
+                              : recipientEmail,
+                          userRole == 'recipient'
+                              ? user.phone
+                              : recipientPhone),
+                      UserExpeditionType(
+                          'sender',
+                          userRole == 'sender'
+                              ? '${user.name} ${user.lastName}'
+                              : recipientName,
+                          userRole == 'sender'
+                              ? user.email
+                              : recipientEmail,
+                          userRole == 'sender'
+                              ? user.phone
+                              : recipientPhone),
+                    );
+                    Provider.of<AppState>(context, listen: false)
+                        .addNewExpedition(expedition);
+                  }
+                  if (step == 10) {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    return;
+                  }
+                  changePage();
+                }),
+          ],
+        )
+            : SizedBox(),
+        content:
+        PageViewBuilderLayout(pageController: pageController, pages: pages),
         showHeader: true);
   }
 }

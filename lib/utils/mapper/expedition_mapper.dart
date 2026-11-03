@@ -1,12 +1,13 @@
+import 'dart:math';
 
+import 'package:lucky_way_ios/database.dart';
+import 'package:lucky_way_ios/models/track_model.dart';
+import 'package:lucky_way_ios/utils/mapper/user_mapper.dart';
 
-import '../../database.dart';
 import '../../models/address_model.dart';
 import '../../models/expedition_model.dart';
 import '../../models/package_model.dart';
-import '../../models/track_model.dart';
 import '../../models/user_model.dart';
-import '../user_type_converter.dart';
 
 ExpeditionModel expeditionMapper(
     Map<String, dynamic> expedition, TrackModel? track) {
@@ -62,6 +63,7 @@ ExpeditionModel expeditionMapper(
       expedition['sender']['phone']);
 
   ExpeditionModel expe = ExpeditionModel(
+      expedition['date'],
       expedition['id'],
       packages,
       expedition['equip'],
@@ -77,7 +79,9 @@ ExpeditionModel expeditionMapper(
       expedition['senderRole'],
       receiver,
       sender,
-      track: track);
+      track: track?.id,
+      trackDriverId: track?.truckDriver.id
+  );
 
   return expe;
 }
@@ -134,6 +138,7 @@ Future<ExpeditionModel> expeditionMapperWithTrack(
       expedition['sender']['email'],
       expedition['sender']['phone']);
   ExpeditionModel expe = ExpeditionModel(
+      expedition['date'],
       expedition['id'],
       packages,
       expedition['equip'],
@@ -149,8 +154,8 @@ Future<ExpeditionModel> expeditionMapperWithTrack(
       expedition['senderRole'],
       receiver,
       sender,
-      track: expedition['track'] != null
-          ? await FirebaseDatabase().getTrack(expedition['track'])
-          : null);
+      track: expedition['track'],
+      trackDriverId: expedition['trackDriverId']);
+
   return expe;
 }
