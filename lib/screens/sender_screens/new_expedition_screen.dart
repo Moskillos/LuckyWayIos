@@ -483,6 +483,71 @@ class _NewExpeditionScreenState extends State<NewExpeditionScreen> {
                 backgroundColor: Colors.black,
                 textStyle: whiteText14w700,
                 onPressed: () {
+                  if(step == 1){
+                    if(userRole == "sender"){
+                      if(selectedCity != null && selectedCity!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("city"),
+                            context
+                        );
+                      }
+                      if(selectedStreet != null && selectedStreet!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("street"),
+                            context
+                        );
+                      }
+                      if(selectedNumber != null && selectedNumber!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("number"),
+                            context
+                        );
+                      }
+                      if(selectedProvince != null && selectedProvince!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("province"),
+                            context
+                        );
+                      }
+                      if(selectedPostalCode != null && selectedPostalCode!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("postalCode"),
+                            context
+                        );
+                      }
+                    } else {
+                      if(selectedDestinationCity != null && selectedDestinationCity!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("city"),
+                            context
+                        );
+                      }
+                      if(selectedDestinationStreet != null && selectedDestinationStreet!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("street"),
+                            context
+                        );
+                      }
+                      if(selectedDestinationNumber != null && selectedDestinationNumber!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("number"),
+                            context
+                        );
+                      }
+                      if(selectedDestinationProvince != null && selectedDestinationProvince!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("province"),
+                            context
+                        );
+                      }
+                      if(selectedDestinationPostalCode != null && selectedDestinationPostalCode!.isEmpty){
+                        popUpValidation(
+                            AppLocalizations.of(context).translate("postalCode"),
+                            context
+                        );
+                      }
+                    }
+                  }
                   if (step == 2) {
                     if(recipientName.isEmpty){
                       popUpValidation(

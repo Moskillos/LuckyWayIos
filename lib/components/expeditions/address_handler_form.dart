@@ -53,6 +53,13 @@ class AddressHandlerForm extends StatefulWidget {
 
 class _AddressHandlerFormState extends State<AddressHandlerForm> {
   final String _apiKey = 'AIzaSyDVkK7x-ABKGCaMEVWyzuhbAe_jklIJo-U';
+  bool manualAddress = false;
+
+  void setManualAddress(){
+    setState(() {
+      manualAddress = !manualAddress;
+    });
+  }
 
   Widget phoneAndEmailRender(){
     if(widget.isRetire && widget.userRole == 'recipient'){
@@ -85,9 +92,24 @@ class _AddressHandlerFormState extends State<AddressHandlerForm> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 15.0, right: 15),
-      child: ListView(
+      child: manualAddress ? Column(
+        children: [
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setStreet, label: AppLocalizations.of(context).translate("street"),),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setCivicNumber, label: AppLocalizations.of(context).translate("civicNumber"),),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setPostalCode, label: AppLocalizations.of(context).translate("postalCode"),),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setProvince, label: AppLocalizations.of(context).translate("province"),),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setCity, label: AppLocalizations.of(context).translate("city"),),
+          CustomInput(placeholder: AppLocalizations.of(context).translate("insertLabel"), updateValue: widget.setNotes, label: AppLocalizations.of(context).translate(widget.isRetire ? "retireNotes" : "destinationNotes"),),
+        ],
+      ) :  ListView(
         children: [
           Text(AppLocalizations.of(context).translate(widget.isRetire ? "insertRetireAddress" : "insertDestinationAddress"), style: greyText18),
+          InkWell(
+              onTap: (){
+                setManualAddress();
+              },
+              child: Text(manualAddress ? AppLocalizations.of(context).translate("goBack") : AppLocalizations.of(context).translate("addressNotFound"), style: blueText14Underline,)),
+          SizedBox(height: 20,),
           SizedBox(height: 40,),
           phoneAndEmailRender(),
           SizedBox(height: 20,),

@@ -632,10 +632,6 @@ class _NewTrackScreenState extends State<NewTrackScreen> with WidgetsBindingObse
           image: imagePath),
       SuccessScreen(title: AppLocalizations.of(context).translate("trackPublished"), description: AppLocalizations.of(context).translate("prepareToAVoyage"),)
     ];
-    print("isKeyboardVisible");
-    print(isKeyboardVisible);
-    print("step");
-    print(step);
 
     return LuckyWayLayout(
       hideTitle: step == 7 ? true : null,

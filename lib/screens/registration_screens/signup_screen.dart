@@ -172,7 +172,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 Checkbox(
                     value: widget.privacyPolicy,
                     onChanged: (value) {
-                      widget.setPrivacyPolicy;
+                      widget.setPrivacyPolicy();
                     }),
                 Flexible(
                   child: RichText(
@@ -359,11 +359,9 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Row(
               children: [
                 Checkbox(
-                    value: accepted,
+                    value: widget.privacyPolicy ,
                     onChanged: (value) {
-                      setState(() {
-                        accepted = !accepted;
-                      });
+                      widget.setPrivacyPolicy();
                     }),
                 Flexible(
                   child: RichText(
@@ -636,11 +634,9 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Row(
                 children: [
                   Checkbox(
-                      value: accepted,
+                      value: widget.privacyPolicy ,
                       onChanged: (value) {
-                        setState(() {
-                          accepted = !accepted;
-                        });
+                        widget.setPrivacyPolicy();
                       }),
                   Flexible(
                     child: RichText(
